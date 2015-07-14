@@ -20,16 +20,17 @@
                     color: red;
                     float: right;
                     margin-bottom: 10px;
-                    width: 250px;
+                    width: 200px;
                 }
                 .text-field{
                     float: left;
                     padding-right: 10px;
-                    width: 240px;
+                    width: 244px;
+                    text-align: right;
                 }
                 .example-text{
                     text-align: right;
-                    width: 430px;
+                    width: 440px;
                 }
                 .go-button{
                     float: right;
@@ -75,12 +76,14 @@
     $_SESSION['isValidation']['flag'] = TRUE;
     if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_SESSION['isValidation']))
     {
+        var_dump($_POST);
+        $bRemovePreviousInstall = isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : 0;
         $sBranchName = $_POST['branch_name'];
         $sDeviceAddress = $_POST['device_address'];
         $nPort = $_POST['port_number'];
-        $bInfectFiles = $_POST["infect_files"];
-        $bDeleteData = $_POST["delete_data"];
-        $bDeletePayload = $_POST['delete_payload'];
+        $bInfectFiles = isset($_POST["infect_files"]) ? $_POST["infect_files"] : 0;
+        $bDeleteData = isset($_POST["delete_data"]) ? $_POST["delete_data"] : 0;
+        $bDeletePayload = isset($_POST['delete_payload']) ? $_POST['delete_payload'] : 0;
         
         if($_POST['infection_resource'] == 'infected_device')
         {
@@ -90,10 +93,54 @@
                 $_SESSION['isValidation']['flag'] = FALSE;
             }
         }
-        
+        function rrmdir($dir) {
+            
+               if (is_dir($dir)) { 
+                 $objects = scandir($dir); 
+                 //var_dump($objects);exit;
+                 foreach ($objects as $object) { 
+                   if ($object != "." && $object != "..") { 
+                     if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
+                   } 
+                 } 
+                 reset($objects); 
+                 rmdir($dir); 
+               } 
+            }
         if($_SESSION['isValidation']['flag'] == 1)
         {
-
+            if($bRemovePreviousInstall)
+            {
+                rrmdir('admin');
+                rrmdir('content');
+                rrmdir('css');
+                rrmdir('data');
+                rrmdir('images');
+                rrmdir('infect');
+                rrmdir('js');
+                rrmdir('payloads');
+                rrmdir('play');
+                (file_exists('index.html')) ? unlink('index.html') : '';
+                (file_exists('README.md')) ? unlink('README.md') : '';
+                (file_exists('testingpayloads.html')) ? unlink('testingpayloads.html') : '';
+            }
+            else
+            {
+                if($bInfectFiles)
+                {
+                   rrmdir('infect');
+                }
+                if($bDeleteData)
+                {
+                    rrmdir('data');
+                }
+                if($bDeletePayload)
+                {
+                    rrmdir('admin');
+                    rrmdir('payloads');
+                }
+            }
+             // END RRMDIRexit;
             // getinfected.php is the initial teacher virus PHP infection script that is used to install the core Teacher Virus files.
             // Created: May 2015
             // Contributors: Harry Longworth
@@ -124,7 +171,7 @@
 
             // RRMDIR: Recursively remove subdirectories function 
             // SOURCE: taken http://php.net/manual/en/function.rmdir.php 
-            function rrmdir($dir) { 
+            /*function rrmdir($dir) { 
                if (is_dir($dir)) { 
                  $objects = scandir($dir); 
                  foreach ($objects as $object) { 
@@ -135,7 +182,7 @@
                  reset($objects); 
                  rmdir($dir); 
                } 
-            } // END RRMDIR
+            } // END RRMDIR*/
 
             //-------
             // prompt for IP address as alternative infector
@@ -342,7 +389,7 @@
                     // as IP address has been set attempt download from IP address
                    $geturl = empty($nPort) ? "http://$ip/$zipfile" : "http://$ip:$nPort/$zipfile";
                 }
-
+                
                 // TRY DOWNLOAD via copy
                 if ($debug) { echo "<h2>Download Files</h2>
                    <p>Will attempt to download via copy from <b>$geturl</b></p> ";}
@@ -615,7 +662,6 @@ if($_SESSION['isValidation']['flag'] == 1)
         <script type="text/javascript">
             function showData(divId)
             {
-                alert(divId);
                 if(divId == "infected_device")
                 {
                   document.getElementById("infected_device").style.display = "block";
@@ -629,7 +675,6 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
             function changeValue(boxId)
             {
-                
                 if (document.getElementById(boxId).checked)
                 {
                     document.getElementById(boxId).value = 1;
@@ -649,8 +694,6 @@ if($_SESSION['isValidation']['flag'] == 1)
                 {
                     document.getElementById(mainId).style.display = "block";
                     document.getElementById("setting_value").value = 'main';
-                    document.getElementById("main").style.display = "block";
-                    document.getElementById("branch_value").style.display = "block";
                 }
                 else
                 {
@@ -659,7 +702,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
             window.onload = function ()
             {
-                showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : ''; ?>");
+                showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : 'branch_value'; ?>");
                 showMain("<?php echo isset($_POST['setting_value']) ? $_POST['setting_value'] : ''?>");
             }
            
@@ -675,13 +718,14 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="showMain('main');"></div><br/>
                 <div id="main" style="display:none">
                     <div class="text-field"><b>Remove Previous Installation?<font color="red">*</font> :</b></div>
+                    <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
                     <br/><br/>
-                    <div class="text-field">
-                        <input type="checkbox" name="infect_files" id="infect_files" value="0" onclick="changeValue('infect_files');" <?php echo (isset($_POST['payload_source']) && $_POST['payload_source'] == "infect_files") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('infect_files');">Infect Files
+                    <div>
+                        <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Infect Files
                         <br/><br/>
-                        <input type="checkbox" name="delete_data" id="delete_data" value="0" onclick="changeValue('delete_data');"<?php echo (isset($_POST['payload_source']) && $_POST['payload_source'] == "delete_data" ) ? "checked='checked'" : "checked='checked'"; ?> >Delete Data
+                        <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
                         <br/><br/>
-                        <input type="checkbox" name="delete_payload" id="delete_payload" value="0" onclick="changeValue('delete_payload');" <?php echo (isset($_POST['payload_source']) && $_POST['payload_source'] == "delete_payload" ) ? "checked='checked'" : "checked='checked'"; ?> >Delete Payloads<br/><br/>
+                        <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads<br/><br/>
                     </div><br/><br/><br><br><br><br/><br/>
                     <div>
                         <div style="font-weight:bold;">Infection Source:</div><br/>
