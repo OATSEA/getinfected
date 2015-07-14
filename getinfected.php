@@ -76,7 +76,6 @@
     $_SESSION['isValidation']['flag'] = TRUE;
     if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_SESSION['isValidation']))
     {
-        var_dump($_POST);
         $bRemovePreviousInstall = isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : 0;
         $sBranchName = $_POST['branch_name'];
         $sDeviceAddress = $_POST['device_address'];
@@ -658,6 +657,14 @@ if($_SESSION['isValidation']['flag'] == 1)
 
     if($_SESSION['isValidation']['flag'] == 1 || count($_SESSION['isValidation']) > 1)
     {
+        if(is_dir($_SERVER['DOCUMENT_ROOT']."infect") && !isset($_GET['isValidUser']))
+        {
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+            $protocol .= "://" . $_SERVER['HTTP_HOST'] . '/admin';
+            header("Location: $protocol");
+        }
+        else 
+        {
 ?>
         <script type="text/javascript">
             function showData(divId)
@@ -726,7 +733,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
                         <br/><br/>
                         <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads<br/><br/>
-                    </div><br/><br/><br><br><br><br/><br/>
+                    </div><br/>
                     <div>
                         <div style="font-weight:bold;">Infection Source:</div><br/>
                         <input type="radio" name="infection_resource" value="github" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "github") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
@@ -762,6 +769,7 @@ if($_SESSION['isValidation']['flag'] == 1)
         </form>
 <?php
 }
+    }
 ?>
     </body>
 </html>
