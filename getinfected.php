@@ -398,7 +398,7 @@
                 $copyflag = copy($geturl,$zipfile);
 
                 if ($copyflag === TRUE) {
-                    echo "<h3>Download Succeeded</h3>";
+                    if($debug) { echo "<h3>Download Succeeded</h3>"; }
                     if($debug) { echo "<p>Files downloaded using <b>Copy</b> instead</p>"; }
                 } else { 
                     // try CURL    
@@ -650,7 +650,9 @@
             // ** TO DO ***
 
             // current test stub instead of admin page opens in new window:
-            if ($debug) {echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;}
+            // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
+            echo '<h2>Infection Complete!</h2><p><a href="admin" target="_blank">Next . . </a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
+            $installed=1;
         }
     }
 if($_SESSION['isValidation']['flag'] == 1) 
@@ -724,6 +726,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
            
         </script>
+     <?php if (!$installed) { ?>
         <div class="color-white">
             <a class="admin_img" href="<?php echo $protocol.'/admin'; ?>"><i class="mainNav fa fa-cog fa-3x"></i></a>
         </div><br/><br/><br/>
@@ -777,7 +780,10 @@ if($_SESSION['isValidation']['flag'] == 1)
             </div>
             <input type="hidden" name="setting_value" id="setting_value">
         </form>
+      
+     
 <?php
+      } // END if installed
 }
     }
 ?>
