@@ -651,7 +651,7 @@
 
             // current test stub instead of admin page opens in new window:
             // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
-            echo '<h2>Infection Complete!</h2><p><a href="admin" target="_blank">Next . . </a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
+            echo '<h2>Infection Complete!</h2><h2><a href="admin" target="_blank"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
             $installed=1;
         }
     }
