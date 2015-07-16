@@ -761,11 +761,9 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <div class="error-message">
                             <?php echo isset($_SESSION['isValidation']['device_address']) ? $_SESSION['isValidation']['device_address'] : '';?>
                         </div>
-                        <div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 </div>
-                        <br/><br/>
+                        <br/><div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 </div><br/>
                         <div class="text-field">Port :</div>
                         <input type="text" name="port_number" id="port_number" value="8080">
-                        <div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
                         <input type="button" value="Clear" onclick="removePort('port_number');"/>
                         <!--&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="removePort();"><i class="fa fa-eraser"></i></a>
                         <br/><br/>-->
