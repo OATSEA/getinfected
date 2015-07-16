@@ -734,9 +734,9 @@ if($_SESSION['isValidation']['flag'] == 1)
                 </div>
                 <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="showMain('main');"></div><br/>
                 <div id="main" style="display:none">
-                    <div class="text-field"><b>Remove Previous Installation? :</b></div>
+                    <div class="text-field"><b>Remove Previous Installation?</b></div>
                     <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
-                    <br/><br/>
+                     <br/><br/>
                     <div>
                         <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Infecting Files
                         <br/><br/>
@@ -751,23 +751,25 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
                     </div><br/><br/>
                     <div id="branch_value" style="display:none">
-                        <div class="text-field">Branch? :</div>
+                        <div class="text-field">Branch?</div>
                         <input type="text" value="master" name="branch_name" id="branch_name">
                         <input type="button" value="Clear" onclick="removePort('branch_name');"/>
                     </div>
                     <div id="infected_device" style="display:none">
-                        <div class="text-field">Infected Device Address (IP or URL)<font color="red">*</font> :</div>
+                        <div class="text-field">Infected Device Address <font color="red">*</font> :</div>
                         <input type="text" name="device_address">
                         <div class="error-message">
                             <?php echo isset($_SESSION['isValidation']['device_address']) ? $_SESSION['isValidation']['device_address'] : '';?>
                         </div>
-                        <div class="example-text">For Example: 192.168.143.1 </div>
+                        <div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 </div>
                         <br/><br/>
                         <div class="text-field">Port :</div>
                         <input type="text" name="port_number" id="port_number" value="8080">
+                        <div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
                         <input type="button" value="Clear" onclick="removePort('port_number');"/>
                         <!--&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="removePort();"><i class="fa fa-eraser"></i></a>
                         <br/><br/>-->
+                         <br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
                     </div><br/>
                     <div class="mandatory"><font color="red">*</font> indicates mandatory field</div>
                 </div>
