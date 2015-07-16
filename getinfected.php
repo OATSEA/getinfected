@@ -321,18 +321,18 @@
             // -----------
 
             // Check play dir exists or not
-            if (file_exists('play')) {
+            /*if (file_exists('play')) {
                 // if play folder exists then Teacher Virus is already installed and we don't want to allow script to run again so
-                displayRedirect();
+                //displayRedirect();
 
-            } else {
+            } else {*/
                 if ($debug) { echo "<h1>Start <b>Teacher Virus</b> infection!</h1>";}
                 if ($debug) { echo "<p>Directory <b>play</b> doesn't exist so continue with Teacher Virus infection<p>"; }
                 // play folder doesn't exist
                 // Check if ip param is set to either an IP address or a url (i.e. without http:// infront)    
                 // $ip="10.1.1.38" or "test.teachervirus.org"
 
-                if(isset($sDeviceAddress)&&(!empty($sDeviceAddress))) {
+                if(isset($sDeviceAddress) && (!empty($sDeviceAddress))) {
                     $ip= $sDeviceAddress;
                     echo "<p>Address has been provided as: $ip</p>";
                 } else {
@@ -340,7 +340,7 @@
                     echo "<p> IP Address not provided</p>";
                 } // end IP is set check
 
-            } //  END play check
+            //} //  END play check
 
             //----------------------------------    
             // Download OATSEA-teachervirus.zip 
@@ -381,9 +381,7 @@
             } else {
                 if ($ip=="no") {
                     // Download from github zipball/master as no IP address set
-                    $geturl = (empty($sBranchName) && isset($_POST['infection_resource']) && $_POST['infection_resource'] == "github") ? "https://github.com/$username/$repo/zipball/master/" : "https://github.com/$username/$repo/zipball/$sBranchName/";
-                    // Issues with curl required use of format config above (e.g. no ' for some reason)
-
+                    $geturl = (!empty($sBranchName) && isset($_POST['infection_resource']) && $_POST['infection_resource'] == "github") ? "https://github.com/$username/$repo/zipball/$sBranchName/" : "https://github.com/$username/$repo/zipball/master/";
                 } else {
                     // as IP address has been set attempt download from IP address
                    $geturl = empty($nPort) ? "http://$ip/$zipfile" : "http://$ip:$nPort/$zipfile";
@@ -480,7 +478,7 @@
                         if ($debug) { echo "<h2>Download with CURL failed</h2>";}
                         echo "<h3>Infection Failed!</h3><p>Couldn't download with either copy or curl</p>";
                         unlink($zipfile);
-                        promptForIP();
+                        //promptForIP();
                     } // If Download failed using CURL 
                 }// END else CURL
             } // END Download if zipfile doesn't already exists
@@ -587,7 +585,6 @@
 
                     // Destination:
                     $newDir = str_replace("/".$startingloc, '', realpath($file));
-
                     // if directory doesn't exist then create it
                     if (!makeDIR($newDir,1)) {
                         if($debug) { echo "<p>Failed to create directory: $newDir</p>"; }
@@ -607,12 +604,13 @@
 
                     // Move via rename
                     // rename(oldname, newname)
-                    if (rename($currentFile, $newFile)) {
+                    rename($currentFile, $newFile);
+                    /*if (rename($currentFile, $newFile)) {
                         if($debug) { echo "<p>Moved <br> $currentFile <br>to  $newFile</p>"; }
                     } else {
                         if($debug) { echo "<p>Failed to move <br>$currentFile <br>to $newFile</p>"; }
                     } // END rename 
-
+                    */
                 }// END is Dir or File checks
 
               } // END foreach
@@ -649,7 +647,7 @@
             // ** TO DO ***
 
             // current test stub instead of admin page opens in new window:
-            if ($debug) {echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>';}
+            if ($debug) {echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;}
         }
     }
 if($_SESSION['isValidation']['flag'] == 1) 
@@ -657,7 +655,7 @@ if($_SESSION['isValidation']['flag'] == 1)
 
     if($_SESSION['isValidation']['flag'] == 1 || count($_SESSION['isValidation']) > 1)
     {
-        if(is_dir($_SERVER['DOCUMENT_ROOT']."infect") && !isset($_GET['isValidUser']))
+        if(is_dir($_SERVER['DOCUMENT_ROOT']."/infect") && !isset($_GET['isValidUser']) )
         {
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off") ? "https" : "http";
             $protocol .= "://" . $_SERVER['HTTP_HOST'] . '/admin';
