@@ -69,7 +69,8 @@
     </head>
     <body class="main">
 <?php
-    //session_start();
+
+    session_start();
     $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
     $protocol .= "://" . $_SERVER['HTTP_HOST'];
     
@@ -153,7 +154,7 @@
             // - file permissions not set
             // so try copy first and then CURL
 
-            $debug=1;
+            $debug=0;
 
             if ($debug) {
                 ini_set('display_errors',1);
@@ -655,7 +656,7 @@ if($_SESSION['isValidation']['flag'] == 1)
 
     if($_SESSION['isValidation']['flag'] == 1 || count($_SESSION['isValidation']) > 1)
     {
-        if(is_dir($_SERVER['DOCUMENT_ROOT']."/infect") && !isset($_GET['isValidUser']) )
+        if((is_dir($_SERVER['DOCUMENT_ROOT']."/infect") && (!isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (!isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off") ? "https" : "http";
             $protocol .= "://" . $_SERVER['HTTP_HOST'] . '/admin';
@@ -687,6 +688,15 @@ if($_SESSION['isValidation']['flag'] == 1)
                 else
                 {
                     document.getElementById(boxId).value = 0;
+                }
+                if(boxId == "remove_previous_install")
+                {
+                    document.getElementById("infect_files").checked = false;
+                    document.getElementById("delete_data").checked = false;
+                    document.getElementById("delete_payload").checked = false;
+                    document.getElementById("infect_files").value = 0;
+                    document.getElementById("delete_data").value = 0;
+                    document.getElementById("delete_payload").value = 0;
                 }
             }
             function removePort(textId)
