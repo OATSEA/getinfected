@@ -214,7 +214,7 @@
             //----------
             //Make a new directory with optional error messages
             function makeDIR($directory,$debugtxt=0) {
-
+                
                 // Create infect directory if it doesn't exist:
                 if (file_exists($directory)) {
                     if ($debugtxt) { echo "<p>Directory <b>$directory</b> already exists </p>"; }
@@ -258,7 +258,7 @@
                             }
 
                         } else {
-                            echo "<p>$pathFile is a file</p>";
+                            if($debug) {echo "<p>$pathFile is a file</p>"; }
 
                             // $currentFile = realpath($file); // current location
                             $currentFile = $pathFile;
@@ -335,10 +335,10 @@
 
                 if(isset($sDeviceAddress) && (!empty($sDeviceAddress))) {
                     $ip= $sDeviceAddress;
-                    echo "<p>Address has been provided as: $ip</p>";
+                    if($debug) {echo "<p>Address has been provided as: $ip</p>"; }
                 } else {
                     $ip="no";
-                    echo "<p> IP Address not provided</p>";
+                    if($debug) { echo "<p> IP Address not provided</p>"; }
                 } // end IP is set check
 
             //} //  END play check
@@ -352,7 +352,7 @@
             // default destination for downloaded zipped files
 
             // Create infect directory if it doesn't exist:
-            if (!makeDIR($infect,true)) { 
+            if (!makeDIR($infect,0)) { 
                     // failed to make directory so exit
                     exit("<h3>Infection Failed!</h3>");
             }
@@ -398,7 +398,8 @@
                 $copyflag = copy($geturl,$zipfile);
 
                 if ($copyflag === TRUE) {
-                    echo "<h3>Download Succeeded</h3><p>Files downloaded using <b>Copy</b> instead</p>";
+                    echo "<h3>Download Succeeded</h3>";
+                    if($debug) { echo "<p>Files downloaded using <b>Copy</b> instead</p>"; }
                 } else { 
                     // try CURL    
 
@@ -587,7 +588,7 @@
                     // Destination:
                     $newDir = str_replace("/".$startingloc, '', realpath($file));
                     // if directory doesn't exist then create it
-                    if (!makeDIR($newDir,1)) {
+                    if (!makeDIR($newDir,0)) {
                         if($debug) { echo "<p>Failed to create directory: $newDir</p>"; }
                     }
                 } else {
@@ -617,7 +618,8 @@
               } // END foreach
             } // END Try
             catch (UnexpectedValueException $e) {
-                echo "<h2>Error Moving Files!</h2><p>There was a directory we couldn't get into!</p>";
+                echo "<h2>Error Moving Files!</h2>";
+                if($debug) {echo "<p>There was a directory we couldn't get into!</p>";}
             }
             if ($debug) {echo "<p>Loop Count: $tally2</p>";}
 
@@ -732,11 +734,11 @@ if($_SESSION['isValidation']['flag'] == 1)
                 </div>
                 <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="showMain('main');"></div><br/>
                 <div id="main" style="display:none">
-                    <div class="text-field"><b>Remove Previous Installation?<font color="red">*</font> :</b></div>
+                    <div class="text-field"><b>Remove Previous Installation? :</b></div>
                     <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
                     <br/><br/>
                     <div>
-                        <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Infect Files
+                        <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Infecting Files
                         <br/><br/>
                         <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
                         <br/><br/>
@@ -751,7 +753,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                     <div id="branch_value" style="display:none">
                         <div class="text-field">Branch? :</div>
                         <input type="text" value="master" name="branch_name" id="branch_name">
-                        <input type="button" value="Remove" onclick="removePort('branch_name');"/>
+                        <input type="button" value="Clear" onclick="removePort('branch_name');"/>
                     </div>
                     <div id="infected_device" style="display:none">
                         <div class="text-field">Infected Device Address (IP or URL)<font color="red">*</font> :</div>
@@ -763,7 +765,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <br/><br/>
                         <div class="text-field">Port :</div>
                         <input type="text" name="port_number" id="port_number" value="8080">
-                        <input type="button" value="Remove" onclick="removePort('port_number');"/>
+                        <input type="button" value="Clear" onclick="removePort('port_number');"/>
                         <!--&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="removePort();"><i class="fa fa-eraser"></i></a>
                         <br/><br/>-->
                     </div><br/>
