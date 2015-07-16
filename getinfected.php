@@ -155,6 +155,7 @@
             // so try copy first and then CURL
 
             $debug=0;
+            $installed=0;
 
             if ($debug) {
                 ini_set('display_errors',1);
