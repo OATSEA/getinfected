@@ -806,11 +806,14 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <br/><br/>-->
                          <br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
                     </div><br/>
+                    <div>
+                        <b>Show debug text</b>
+                        <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('show_debug');">
+                    </div>
+                     <br/>
                     <div class="mandatory"><font color="red">*</font> indicates mandatory field</div>
                 </div>
-                <div class="text-field"><b>Show debug text</b></div>
-                <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('show_debug');">
-                 <br/><br/>
+                
                 <div class="go-button">
                     <input type="submit" name="button" id="button" value="GO!" align="center">  
                 </div><br/>    
