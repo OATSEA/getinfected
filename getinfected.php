@@ -65,11 +65,31 @@
                     font-weight: bold;
                     font-size: 18px;
                 }
+                .fa-cog:before{content:"\f013"}
+                .fa-3x {font-size: 3em;}
+                .fa {
+                        display: inline-block;
+                        font-family: FontAwesome;
+                        font-feature-settings: normal;
+                        font-kerning: auto;
+                        font-language-override: normal;
+                        font-size: inherit;
+                        font-size-adjust: none;
+                        font-stretch: normal;
+                        font-style: normal;
+                        font-synthesis: weight style;
+                        font-variant: normal;
+                        font-weight: normal;
+                        line-height: 1;
+                        text-rendering: auto;
+                        transform: translate(0px, 0px);
+                    }
+
         </style>
     </head>
     <body class="main">
 <?php
-
+    $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
     session_start();
     $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
     $protocol .= "://" . $_SERVER['HTTP_HOST'];
@@ -154,7 +174,6 @@
             // - file permissions not set
             // so try copy first and then CURL
 
-            $debug=0;
             $installed=0;
 
             if ($debug) {
@@ -369,9 +388,10 @@
 
             // Check for IP param and set $ip if param provided
             // ** TO DO **
-
+            
             // Download file if OATSEA-teachervirus.zip doesn't already exist
             if (file_exists($zipfile)) {
+                $debug = 1;
                 if ($debug) { 
                     echo "<p>The Teacher Virus files have already been downloaded to: $zipfile</p>
                     <p>This infection will use the existing file rather than downloading a new version of Teacher Virus.</p>
@@ -388,7 +408,6 @@
                     // as IP address has been set attempt download from IP address
                    $geturl = empty($nPort) ? "http://$ip/$zipfile" : "http://$ip:$nPort/$zipfile";
                 }
-                
                 // TRY DOWNLOAD via copy
                 if ($debug) { echo "<h2>Download Files</h2>
                    <p>Will attempt to download via copy from <b>$geturl</b></p> ";}
@@ -397,7 +416,7 @@
                 // get following error on MAC: 
                 // Warning: copy(): SSL operation failed with code 1.
                 $copyflag = copy($geturl,$zipfile);
-
+                
                 if ($copyflag === TRUE) {
                     if($debug) { echo "<h3>Download Succeeded</h3>"; }
                     if($debug) { echo "<p>Files downloaded using <b>Copy</b> instead</p>"; }
@@ -484,7 +503,7 @@
                         //promptForIP();
                     } // If Download failed using CURL 
                 }// END else CURL
-            } // END Download if zipfile doesn't already exists
+            
 
 
             // ---------------------
@@ -513,16 +532,17 @@
 
             umask(0);
             $zip = new ZipArchive;
-            $zipFlag = $zip->open($zipfile);
-            if ($zipFlag === TRUE) {
-              // extract it to the path we determined above
+            
+            if ($zip->open($zipfile,  ZipArchive::CREATE)) {
+                // extract it to the path we determined above
               $zip->extractTo($temp_unzip_path);
               // $zip->extractTo($path);
               $zip->close();
                 if($debug) { echo "<h3>Unzip Successful!</h3><p> $zipfile extracted to $temp_unzip_path </p>"; }
             } else {
-              exit("<h2>Infection Failed!</h2><p> couldn't open $zipfile </p>");
+                exit("<h2>Infection Failed!</h2><p> couldn't open $zipfile </p>");
             }
+            
 
             // -------------------------    
             // Determine Subfolder Name
@@ -596,7 +616,7 @@
                     // It's a file so move it
                     // ** TEST: what if directory hasn't been created yet?? or does Recursive always do the directory first
 
-                    $currentFile = realpath($file); // current location
+                    echo $currentFile = realpath($file);exit; // current location
                     $newFile = str_replace("/".$startingloc, '', realpath($file)); // Destination
 
                     // if file already exists remove it
@@ -607,13 +627,12 @@
 
                     // Move via rename
                     // rename(oldname, newname)
-                    rename($currentFile, $newFile);
-                    /*if (rename($currentFile, $newFile)) {
-                        if($debug) { echo "<p>Moved <br> $currentFile <br>to  $newFile</p>"; }
-                    } else {
+                    //rename($currentFile, $newFile);
+                    if (!rename($currentFile, $newFile)) 
+                    {
                         if($debug) { echo "<p>Failed to move <br>$currentFile <br>to $newFile</p>"; }
                     } // END rename 
-                    */
+                    
                 }// END is Dir or File checks
 
               } // END foreach
@@ -654,6 +673,7 @@
             // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
             echo '<h2>Infection Complete!</h2><h2><a href="admin" target="_blank"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
             $installed=1;
+            } // END Download if zipfile doesn't already exists
         }
     }
 if($_SESSION['isValidation']['flag'] == 1) 
@@ -667,7 +687,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             $protocol .= "://" . $_SERVER['HTTP_HOST'] . '/admin';
             header("Location: $protocol");
         }
-        else 
+        else if(!$debug)
         {
 ?>
         <script type="text/javascript">
@@ -725,18 +745,31 @@ if($_SESSION['isValidation']['flag'] == 1)
                 showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : 'branch_value'; ?>");
                 showMain("<?php echo isset($_POST['setting_value']) ? $_POST['setting_value'] : ''?>");
             }
+            function toggle_visibility(id) 
+            {
+                var e = document.getElementById(id);
+                if (e.style.display == 'block' || e.style.display=='')
+                {
+                    e.style.display = 'none';
+                }
+                else 
+                {
+                    e.style.display = 'block';
+                }
+            }
            
         </script>
-     <?php if (!$installed) { ?>
+    <?php if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) { ?>
         <div class="color-white">
             <a class="admin_img" href="<?php echo $protocol.'/admin'; ?>"><i class="mainNav fa fa-cog fa-3x"></i></a>
         </div><br/><br/><br/>
+    <?php } // END if installed ?>
         <form method="post" action="">
             <div id="container">
                 <div class="payload-details">
                     <h2>Ready to Get Infected?</h2>
                 </div>
-                <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="showMain('main');"></div><br/>
+                <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggle_visibility('main');"></div><br/>
                 <div id="main" style="display:none">
                     <div class="text-field"><b>Remove Previous Installation?</b></div>
                     <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
@@ -775,6 +808,9 @@ if($_SESSION['isValidation']['flag'] == 1)
                     </div><br/>
                     <div class="mandatory"><font color="red">*</font> indicates mandatory field</div>
                 </div>
+                <div class="text-field"><b>Show debug text</b></div>
+                <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('show_debug');">
+                 <br/><br/>
                 <div class="go-button">
                     <input type="submit" name="button" id="button" value="GO!" align="center">  
                 </div><br/>    
@@ -784,7 +820,6 @@ if($_SESSION['isValidation']['flag'] == 1)
       
      
 <?php
-      } // END if installed
 }
     }
 ?>
