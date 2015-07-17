@@ -590,7 +590,7 @@
             $subfolder = realpath($subfolder);
             if($debug) { echo "<p>Real Path is : $subfolder </p>"; }
 
-            if($debug) { echo "<p>Is subfolder directory readable?".is_readable($subfolder)."</p>";}
+            if($debug) { echo "<p>Is subfolder directory readable? ".is_readable($subfolder)."</p>";}
 
             $directory_iterator = new RecursiveDirectoryIterator($subfolder,FilesystemIterator::SKIP_DOTS);
 
@@ -601,7 +601,7 @@
               foreach($fileSPLObjects as $file) {
                 $tally2 ++;
                     $filename= $file->getFilename();	
-                // if($debug) { echo "<p>Current Filename: $filename </p>"; }
+                    if($debug) { echo "<p>Current Filename: $filename </p>"; }
 
                     if (($file->isDir())&&(substr( $filename ,0,1) != ".")) {
                     // As it's a directory make sure it exists at destination:
@@ -652,7 +652,7 @@
 
                 $destination  = dirname(__FILE__);
 
-                // if($debug) { echo "<p>Moving files from<br>  $subfolder <br> to: $destination</p>"; }
+                if($debug) { echo "<p>Moving files from<br>  $subfolder <br> to: $destination</p>"; }
 
                 if (moveDIR($subfolder,$destination)) {
                     if($debug) { echo "<h2>Move Succeeded!</h2>"; }
