@@ -286,7 +286,7 @@
                             $newFile = $dest."/".$file;
 
                             if (!file_exists($dest)) {
-                                makeDIR($dest);
+                                makeDIR($dest,$debug);
                             }
                             // if file already exists remove it
                             if (file_exists($newFile)) {
@@ -372,7 +372,7 @@
             // default destination for downloaded zipped files
 
             // Create infect directory if it doesn't exist:
-            if (!makeDIR($infect,0)) { 
+            if (!makeDIR($infect,$debug)) { 
                     // failed to make directory so exit
                     exit("<h3>Infection Failed!</h3>");
             }
@@ -609,7 +609,7 @@
                     // Destination:
                     $newDir = str_replace("/".$startingloc, '', realpath($file));
                     // if directory doesn't exist then create it
-                    if (!makeDIR($newDir,0)) {
+                    if (!makeDIR($newDir,$debug)) {
                         if($debug) { echo "<p>Failed to create directory: $newDir</p>"; }
                     }
                 } else {
