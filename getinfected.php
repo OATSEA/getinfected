@@ -84,10 +84,29 @@
                         text-rendering: auto;
                         transform: translate(0px, 0px);
                     }
+                    #loading {
+                        width: 100%;
+                        height: 100%;
+                        top: 0px;
+                        left: 0px;
+                        position: fixed;
+                        display: block;
+                        opacity: 0.7;
+                        background-color: #fff;
+                        z-index: 99;
+                        text-align: center;
+                     }
+
+                     #loading-image {
+                       position: absolute;
+                       top: 100px;
+                       left: 240px;
+                       z-index: 100;
+                     }
 
         </style>
     </head>
-    <body class="main">
+    <body class="main" onload="loadImage()">
 <?php
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
     session_start();
@@ -532,8 +551,8 @@
 
             umask(0);
             $zip = new ZipArchive;
-            
-            if ($zip->open($zipfile,  ZipArchive::CREATE)) {
+            $zipFlag = $zip->open($zipfile);
+            if ($zipFlag == TRUE) {
                 // extract it to the path we determined above
               $zip->extractTo($temp_unzip_path);
               // $zip->extractTo($path);
@@ -615,10 +634,12 @@
                 } else {
                     // It's a file so move it
                     // ** TEST: what if directory hasn't been created yet?? or does Recursive always do the directory first
-
                     $currentFile = realpath($file); // current location
-                    $aExplodeCurrentFile = explode('.gitignore', $currentFile);
-                    $currentFile = $aExplodeCurrentFile[0];
+                    if(preg_match('/.gitignore/',$currentFile))
+                    {
+                        $aExplodeCurrentFile = explode('.gitignore', $currentFile);
+                        $currentFile = $aExplodeCurrentFile[0];
+                    }
                     $newFile = str_replace("/".$startingloc, '', realpath($file)); // Destination
 
                     // if file already exists remove it
@@ -683,7 +704,8 @@ if($_SESSION['isValidation']['flag'] == 1)
 
     if($_SESSION['isValidation']['flag'] == 1 || count($_SESSION['isValidation']) > 1)
     {
-        if((is_dir($_SERVER['DOCUMENT_ROOT']."/infect") && (!isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (!isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
+        $_SESSION['isLoggedIn'] = isset($_SESSION['isLoggedIn']) ? $_SESSION['isLoggedIn'] : FALSE;
+        if((is_dir($_SERVER['DOCUMENT_ROOT']."/infect") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off") ? "https" : "http";
             $protocol .= "://" . $_SERVER['HTTP_HOST'] . '/admin';
@@ -759,13 +781,17 @@ if($_SESSION['isValidation']['flag'] == 1)
                     e.style.display = 'block';
                 }
             }
-           
+            function loadImage()
+            {
+                document.getElementById("loading").style.display = "block";
+            }
         </script>
     <?php if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) { ?>
         <div class="color-white">
             <a class="admin_img" href="<?php echo $protocol.'/admin'; ?>"><i class="mainNav fa fa-cog fa-3x"></i></a>
         </div><br/><br/><br/>
     <?php } // END if installed ?>
+        
         <form method="post" action="">
             <div id="container">
                 <div class="payload-details">
