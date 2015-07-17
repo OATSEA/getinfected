@@ -616,7 +616,9 @@
                     // It's a file so move it
                     // ** TEST: what if directory hasn't been created yet?? or does Recursive always do the directory first
 
-                    echo $currentFile = realpath($file);exit; // current location
+                    $currentFile = realpath($file); // current location
+                    $aExplodeCurrentFile = explode('.gitignore', $currentFile);
+                    $currentFile = $aExplodeCurrentFile[0];
                     $newFile = str_replace("/".$startingloc, '', realpath($file)); // Destination
 
                     // if file already exists remove it
