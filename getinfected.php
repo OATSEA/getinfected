@@ -85,9 +85,49 @@
                         text-rendering: auto;
                         transform: translate(0px, 0px);
                     }
+                    #loading {
+                        font-size: 70px;
+                        font-weight: bold;
+                        color: #000;
+                        width: 100%;
+                        height: 100%;
+                        top: 0px;
+                        left: 0px;
+                        position: fixed;
+                        display: block;
+                        opacity: 0.7;
+                        background-color: #fff;
+                        z-index: 99;
+                        text-align: center;
+                     }
+
+                     #loading-image {
+                       position: absolute;
+                       top: 100px;
+                       left: 240px;
+                       z-index: 100;
+                     }
+
         </style>
+         <script type="text/javascript">
+            function checkLoaded(loaded){
+                if(loaded == true)
+                {
+                    document.getElementById("loading").style.display = "block";
+                    document.getElementById("getinfected_form").submit();
+                }
+                else
+                {
+                    document.getElementById("loading").style.display = "none";
+                }
+            }
+        </script>
     </head>
-    <body class="main">
+    <body class="main" onload="checkLoaded(false);">
+    <div id="loading">Loading...</div>
+    <script>
+        checkLoaded(false);
+    </script>
 <?php
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
     $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
@@ -621,7 +661,11 @@
                         $currentFile = $aExplodeCurrentFile[0];
                     }
                     $newFile = str_replace("/".$startingloc, '', realpath($file)); // Destination
-
+                    if(preg_match('/.gitignore/',$newFile))
+                    {
+                        $aExplodeNewFile = explode('.gitignore', $newFile);
+                        $newFile = $aExplodeNewFile[0];
+                    }
                     // if file already exists remove it
                     if (file_exists($newFile)) {
                         if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
@@ -631,9 +675,11 @@
                     // Move via rename
                     // rename(oldname, newname)
                     //rename($currentFile, $newFile);
-                    if (!rename($currentFile, $newFile)) 
-                    {
-                        if($debug) { echo "<p>Failed to move <br>$currentFile <br>to $newFile</p>"; }
+                    if (!rename($currentFile , $newFile)) {
+                        if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
+                    } else {
+                        if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
+                        $result = false;
                     } // END rename 
                     
                 }// END is Dir or File checks
@@ -679,6 +725,19 @@
             } // END Download if zipfile doesn't already exists
         }
     }
+    function redirect($filename)
+    {
+        if (!headers_sent())
+            header('Location: '.$filename);
+        else {
+            echo '<script type="text/javascript">';
+            echo 'window.location.href="'.$filename.'";';
+            echo '</script>';
+            echo '<noscript>';
+            echo '<meta http-equiv="refresh" content="0;url='.$filename.'" />';
+            echo '</noscript>';
+        }
+    }
 if($_SESSION['isValidation']['flag'] == 1) 
         unset($_SESSION['isValidation']['user_name_required'],$_SESSION['isValidation']['repository_required']);
 
@@ -689,7 +748,7 @@ if($_SESSION['isValidation']['flag'] == 1)
         {
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off") ? "https" : "http";
             $protocol .= "://" . $_SERVER['HTTP_HOST'] . '/admin';
-            header("Location: $protocol");
+            redirect($protocol);
         }
         else if(!$debug)
         {
@@ -761,14 +820,18 @@ if($_SESSION['isValidation']['flag'] == 1)
                     e.style.display = 'block';
                 }
             }
+            function loadImage()
+            {
+                document.getElementById("loading").style.display = "block";
+            }
         </script>
     <?php if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) { ?>
         <div class="color-white">
-            <a class="admin_img" href="<?php echo $protocol.'/admin'; ?>"><i class="mainNav fa fa-cog fa-3x"></i></a>
+            <a class="admin_img" href="<?php echo $protocol.'/admin'; ?>">Back<!--<i class="mainNav fa fa-cog fa-3x"></i> --></a>
         </div><br/><br/><br/>
     <?php } // END if installed ?>
         
-        <form method="post" action="">
+        <form method="post" action="" id="getinfected_form">
             <div id="container">
                 <div class="payload-details">
                     <h2>Ready to Get Infected?</h2>
@@ -819,15 +882,13 @@ if($_SESSION['isValidation']['flag'] == 1)
                 </div>
                 
                 <div class="go-button">
-                    <input type="submit" name="button" id="button" value="GO!" align="center">  
+                    <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
                 </div><br/>    
             </div>
             <input type="hidden" name="setting_value" id="setting_value">
         </form>
-      
-     
 <?php
-}
+        }
     }
 ?>
     </body>
