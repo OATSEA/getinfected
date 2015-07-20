@@ -1,4 +1,7 @@
-<?php if(session_status()!=PHP_SESSION_ACTIVE) session_start(); ?>
+<?php 
+    if(session_status()!=PHP_SESSION_ACTIVE) session_start(); 
+    error_reporting(E_ALL ^ E_WARNING);
+?>
 <html>
     <head>
         <title>Get Infected</title>
@@ -123,10 +126,10 @@
             }
         </script>
     </head>
-    <body class="main" onload="checkLoaded(false);">
-    <div id="loading">Loading...</div>
+    <body class="main" onload="//checkLoaded(false);">
+<!--    <div id="loading">Loading...</div>-->
     <script>
-        checkLoaded(false);
+        //checkLoaded(false);
     </script>
 <?php
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
@@ -675,13 +678,12 @@
                     // Move via rename
                     // rename(oldname, newname)
                     //rename($currentFile, $newFile);
-                    if (!rename($currentFile , $newFile)) {
-                        if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
-                    } else {
-                        if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
-                        $result = false;
-                    } // END rename 
-                    
+                        if (!rename($currentFile , $newFile)) {
+                            if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
+                        } else {
+                            if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
+                            $result = false;
+                        } // END rename 
                 }// END is Dir or File checks
 
               } // END foreach
@@ -882,7 +884,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 </div>
                 
                 <div class="go-button">
-                    <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
+                    <input type="submit" name="button" id="button" value="GO!" align="center" onclick="//checkLoaded(true);">  
                 </div><br/>    
             </div>
             <input type="hidden" name="setting_value" id="setting_value">
