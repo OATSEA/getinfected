@@ -84,29 +84,9 @@
                         text-rendering: auto;
                         transform: translate(0px, 0px);
                     }
-                    #loading {
-                        width: 100%;
-                        height: 100%;
-                        top: 0px;
-                        left: 0px;
-                        position: fixed;
-                        display: block;
-                        opacity: 0.7;
-                        background-color: #fff;
-                        z-index: 99;
-                        text-align: center;
-                     }
-
-                     #loading-image {
-                       position: absolute;
-                       top: 100px;
-                       left: 240px;
-                       z-index: 100;
-                     }
-
         </style>
     </head>
-    <body class="main" onload="loadImage()">
+    <body class="main">
 <?php
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
     session_start();
@@ -780,10 +760,6 @@ if($_SESSION['isValidation']['flag'] == 1)
                 {
                     e.style.display = 'block';
                 }
-            }
-            function loadImage()
-            {
-                document.getElementById("loading").style.display = "block";
             }
         </script>
     <?php if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) { ?>
