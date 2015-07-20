@@ -1,3 +1,4 @@
+<?php if(session_status()!=PHP_SESSION_ACTIVE) session_start(); ?>
 <html>
     <head>
         <title>Get Infected</title>
@@ -89,7 +90,6 @@
     <body class="main">
 <?php
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
-    session_start();
     $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
     $protocol .= "://" . $_SERVER['HTTP_HOST'];
     
