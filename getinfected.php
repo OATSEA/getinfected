@@ -165,8 +165,8 @@
                      if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
                    } 
                  } 
-                 reset($objects); 
-                 rmdir($dir); 
+                 reset($objects);
+                 empty($dir) ? rmdir($dir) : '';
                } 
             }
         if($_SESSION['isValidation']['flag'] == 1)
@@ -672,19 +672,22 @@
                     // if file already exists remove it
                     if (file_exists($newFile)) {
                         if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
-                        unlink($newFile);
+                        @chmod($newFile, 0777);
+                        @unlink($newFile);
                     }
 
                     // Move via rename
                     // rename(oldname, newname)
                     //rename($currentFile, $newFile);
-                    if (!rename($currentFile , $newFile)) {
-                        if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
-                    } else {
-                        if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
-                        $result = false;
-                    } // END rename 
-                    
+                    if(file_exists($currentFile))
+                    {
+                        if (!rename($currentFile , $newFile)) {
+                            if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
+                        } else {
+                            if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
+                            $result = false;
+                        } // END rename 
+                    }
                 }// END is Dir or File checks
 
               } // END foreach
