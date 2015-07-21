@@ -165,7 +165,7 @@
                      if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
                    } 
                  } 
-                 reset($objects);
+                 reset($objects); 
                  empty($dir) ? rmdir($dir) : '';
                } 
             }
@@ -198,7 +198,6 @@
                 }
                 if($bDeletePayload)
                 {
-                    rrmdir('admin');
                     rrmdir('payloads');
                 }
             }
@@ -788,9 +787,13 @@ if($_SESSION['isValidation']['flag'] == 1)
                     document.getElementById("infect_files").checked = false;
                     document.getElementById("delete_data").checked = false;
                     document.getElementById("delete_payload").checked = false;
+                    document.getElementById("admin_payload").checked = false;
+                    document.getElementById("delete_content").checked = false;
                     document.getElementById("infect_files").value = 0;
                     document.getElementById("delete_data").value = 0;
                     document.getElementById("delete_payload").value = 0;
+                    document.getElementById("admin_payload").value = 0;
+                    document.getElementById("delete_content").value = 0;
                 }
             }
             function removePort(textId)
@@ -814,16 +817,33 @@ if($_SESSION['isValidation']['flag'] == 1)
                 showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : 'branch_value'; ?>");
                 showMain("<?php echo isset($_POST['setting_value']) ? $_POST['setting_value'] : ''?>");
             }
-            function toggle_visibility(id) 
+            function toggle_visibility(id,inputid) 
             {
                 var e = document.getElementById(id);
+                var b = document.getElementById(inputid);
                 if (e.style.display == 'block' || e.style.display=='')
                 {
+                    b.value= 'Show Advanced Settings';
+                    //e.value = 'Hide Advanced Settings';
                     e.style.display = 'none';
                 }
                 else 
                 {
+                    b.value= 'Hide Advanced Settings';
+                    //e.value = 'Show Advanced Settings';
                     e.style.display = 'block';
+                }
+            }
+            function toggle_deletefile(id)
+            {
+                 var d = document.getElementById(id);
+                 if (d.style.display == 'block' || d.style.display=='')
+                {
+                  d.style.display = 'none';
+                }
+                else 
+                {
+                 d.style.display = 'block';
                 }
             }
         </script>
@@ -836,20 +856,41 @@ if($_SESSION['isValidation']['flag'] == 1)
         <form method="post" action="" id="getinfected_form">
             <div id="container">
                 <div class="payload-details">
-                    <h2>Ready to Get Infected?</h2>
+                    <?php 
+                    //$a = $_SERVER['DOCUMENT_ROOT']."/infect";
+                    //echo $a; exit;
+                    if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) 
+                    { ?>
+                    <h2>Update Teacher Virus</h2>
+                    
+                    <?php 
+                    } 
+                    else
+                    { ?>
+                        <h2>Ready to Get Infected?</h2>
+                    <?php
+                    }
+                    ?>
+                    
                 </div>
-                <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggle_visibility('main');"></div><br/>
+                <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggle_visibility('main','show_settings');"></div><br/>
                 <div id="main" style="display:none">
                     <div class="text-field"><b>Remove Previous Installation?</b></div>
                     <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
                      <br/><br/>
-                    <div>
-                        <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Infecting Files
+                     <input type="button" id="show_delete_option" value="Show" onclick="toggle_deletefile('delete_file');">
+                    <div id="delete_file">
+                        <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Delete Infecting Files
                         <br/><br/>
                         <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
                         <br/><br/>
-                        <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads<br/><br/>
-                    </div><br/>
+                        <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads
+                        <br/><br/>
+                        <input type="checkbox" name="admin_payload" id="admin_payload" value="<?php echo isset($_POST['admin_payload']) ? $_POST['admin_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['admin_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('admin_payload');">Delete Admin Payloads
+                        <br/><br/>
+                        <input type="checkbox" name="delete_content" id="delete_content" value="<?php echo isset($_POST['delete_content']) ? $_POST['delete_content'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_content']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_content');" >Delete Content
+                        <br/><br/>
+                    </div><br/><br/>
                     <div>
                         <div style="font-weight:bold;">Infection Source:</div><br/>
                         <input type="radio" name="infection_resource" value="github" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "github") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
@@ -867,7 +908,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <div class="error-message">
                             <?php echo isset($_SESSION['isValidation']['device_address']) ? $_SESSION['isValidation']['device_address'] : '';?>
                         </div>
-                        <br/><div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 </div><br/>
+                        <br/><div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 or demo.teachervirus.org</div><br/>
                         <div class="text-field">Port :</div>
                         <input type="text" name="port_number" id="port_number" value="8080">
                         <input type="button" value="Clear" onclick="removePort('port_number');"/>
