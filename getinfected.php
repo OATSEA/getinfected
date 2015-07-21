@@ -133,6 +133,7 @@
     </script>
 <?php
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
+    $installed=0;
     $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
     $protocol .= "://" . $_SERVER['HTTP_HOST'];
     
@@ -146,6 +147,8 @@
         $bInfectFiles = isset($_POST["infect_files"]) ? $_POST["infect_files"] : 0;
         $bDeleteData = isset($_POST["delete_data"]) ? $_POST["delete_data"] : 0;
         $bDeletePayload = isset($_POST['delete_payload']) ? $_POST['delete_payload'] : 0;
+        $bDeleteAdminPayload = isset($_POST['admin_payload']) ? $_POST['admin_payload'] : 0;
+        $bDeleteContent = isset($_POST['delete_content']) ? $_POST['delete_content'] : 0;
         
         if($_POST['infection_resource'] == 'infected_device')
         {
@@ -189,17 +192,19 @@
             else
             {
                 if($bInfectFiles)
-                {
                    rrmdir('infect');
-                }
+                
                 if($bDeleteData)
-                {
                     rrmdir('data');
-                }
+                
                 if($bDeletePayload)
-                {
                     rrmdir('payloads');
-                }
+                
+                if($bDeleteAdminPayload)
+                    rrmdir('admin');
+                    
+                if($bDeleteContent)
+                    rrmdir('content');
             }
              // END RRMDIRexit;
             // getinfected.php is the initial teacher virus PHP infection script that is used to install the core Teacher Virus files.
@@ -214,8 +219,6 @@
             // - doesn't work out of the box with standard RPI
             // - file permissions not set
             // so try copy first and then CURL
-
-            $installed=0;
 
             if ($debug) {
                 ini_set('display_errors',1);
@@ -433,6 +436,7 @@
             // Download file if OATSEA-teachervirus.zip doesn't already exist
             if (file_exists($zipfile)) {
                 $debug = 1;
+                $installed = 1;
                 if ($debug) { 
                     echo "<p>The Teacher Virus files have already been downloaded to: $zipfile</p>
                     <p>This infection will use the existing file rather than downloading a new version of Teacher Virus.</p>
@@ -755,7 +759,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             $protocol .= "://" . $_SERVER['HTTP_HOST'] . '/admin';
             redirect($protocol);
         }
-        else if(!$debug)
+        else if(!$installed)
         {
 ?>
         <script type="text/javascript">
@@ -802,14 +806,23 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
             function showMain(mainId)
             {
+                var buttonId = document.getElementById('show_settings');
+                var deleteButtonId = document.getElementById('show_delete_option');
+                var divId = document.getElementById('delete_file');
                 if(mainId != "")
                 {
                     document.getElementById(mainId).style.display = "block";
                     document.getElementById("setting_value").value = 'main';
+                    buttonId.value= 'Hide Advanced Settings';
+                    deleteButtonId.value = 'Hide Delete Option';
+                    divId.style.display = 'block';
                 }
                 else
                 {
                     document.getElementById("setting_value").value = 'main';
+                    buttonId.value= 'Show Advanced Settings';
+                    deleteButtonId.value = 'Show Delete Option';
+                    divId.style.display = 'none';
                 }
             }
             window.onload = function ()
@@ -817,34 +830,37 @@ if($_SESSION['isValidation']['flag'] == 1)
                 showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : 'branch_value'; ?>");
                 showMain("<?php echo isset($_POST['setting_value']) ? $_POST['setting_value'] : ''?>");
             }
-            function toggle_visibility(id,inputid) 
+            function toggleVisibility(id,inputid) 
             {
-                var e = document.getElementById(id);
-                var b = document.getElementById(inputid);
-                if (e.style.display == 'block' || e.style.display=='')
+                var divId = document.getElementById(id);
+                var buttonId = document.getElementById(inputid);
+                if (divId.style.display == 'block' || divId.style.display=='')
                 {
-                    b.value= 'Show Advanced Settings';
+                    buttonId.value= 'Show Advanced Settings';
                     //e.value = 'Hide Advanced Settings';
-                    e.style.display = 'none';
+                    divId.style.display = 'none';
                 }
                 else 
                 {
-                    b.value= 'Hide Advanced Settings';
+                    buttonId.value= 'Hide Advanced Settings';
                     //e.value = 'Show Advanced Settings';
-                    e.style.display = 'block';
+                    divId.style.display = 'block';
                 }
             }
-            function toggle_deletefile(id)
+            function toggleDeleteFile(id,buttonid)
             {
-                 var d = document.getElementById(id);
-                 if (d.style.display == 'block' || d.style.display=='')
+                 var divId = document.getElementById(id);
+                 var buttonId = document.getElementById(buttonid);
+                 if (divId.style.display == 'block' || divId.style.display=='')
                 {
-                  d.style.display = 'none';
+                    buttonId.value = 'Show Delete Option';
+                    divId.style.display = 'none';
                 }
                 else 
                 {
-                 d.style.display = 'block';
-                }
+                    buttonId.value = 'Hide Delete Option';
+                    divId.style.display = 'block';
+               }
             }
         </script>
     <?php if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) { ?>
@@ -873,13 +889,13 @@ if($_SESSION['isValidation']['flag'] == 1)
                     ?>
                     
                 </div>
-                <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggle_visibility('main','show_settings');"></div><br/>
+                <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggleVisibility('main','show_settings');"></div><br/>
                 <div id="main" style="display:none">
                     <div class="text-field"><b>Remove Previous Installation?</b></div>
                     <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
                      <br/><br/>
-                     <input type="button" id="show_delete_option" value="Show" onclick="toggle_deletefile('delete_file');">
-                    <div id="delete_file">
+                     <input type="button" id="show_delete_option" value="Show Delete Option" onclick="toggleDeleteFile('delete_file','show_delete_option');">
+                    <div id="delete_file" style="display:none">
                         <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Delete Infecting Files
                         <br/><br/>
                         <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
@@ -890,7 +906,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <br/><br/>
                         <input type="checkbox" name="delete_content" id="delete_content" value="<?php echo isset($_POST['delete_content']) ? $_POST['delete_content'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_content']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_content');" >Delete Content
                         <br/><br/>
-                    </div><br/><br/>
+                     </div><br/><br/>
                     <div>
                         <div style="font-weight:bold;">Infection Source:</div><br/>
                         <input type="radio" name="infection_resource" value="github" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "github") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
@@ -918,7 +934,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                     </div><br/>
                     <div>
                         <b>Show debug text</b>
-                        <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('show_debug');">
+                        <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : '0'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
                     </div>
                      <br/>
                     <div class="mandatory"><font color="red">*</font> indicates mandatory field</div>
