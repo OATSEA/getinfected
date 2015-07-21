@@ -673,18 +673,18 @@
                         $newFile = $aExplodeNewFile[0];
                     }
                     // if file already exists remove it
-                    if (file_exists($newFile)) {
+                    if (file_exists($newFile) && !is_dir($newFile)) {
                         if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
-                        @chmod($newFile, 0777);
-                        @unlink($newFile);
+                        chmod($newFile, 0777);
+                        unlink($newFile);
                     }
 
                     // Move via rename
                     // rename(oldname, newname)
                     //rename($currentFile, $newFile);
-                    if(file_exists($currentFile))
+                    if(!file_exists($newFile))
                     {
-                        if (!rename($currentFile , $newFile)) {
+                        if (rename($currentFile , $newFile)) {
                             if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
                         } else {
                             if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
@@ -729,7 +729,7 @@
 
             // current test stub instead of admin page opens in new window:
             // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
-            echo '<h2>Infection Complete!</h2><h2><a href="admin" target="_blank"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
+            echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
             $installed=1;
             } // END Download if zipfile doesn't already exists
         }
