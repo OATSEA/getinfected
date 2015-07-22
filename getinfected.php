@@ -165,11 +165,19 @@
                  //var_dump($objects);exit;
                  foreach ($objects as $object) { 
                    if ($object != "." && $object != "..") { 
-                     if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
+                       
+                     if (filetype($dir."/".$object) == "dir") 
+                     {
+                        rrmdir($dir."/".$object); 
+                     }
+                     else 
+                     {
+                         unlink($dir."/".$object); 
+                     }
                    } 
                  } 
                  reset($objects); 
-                 empty($dir) ? rmdir($dir) : '';
+                 rmdir($dir);
                } 
             }
         if($_SESSION['isValidation']['flag'] == 1)
@@ -952,4 +960,3 @@ if($_SESSION['isValidation']['flag'] == 1)
 ?>
     </body>
 </html>
-
