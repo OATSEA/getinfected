@@ -22,20 +22,22 @@
                 }
                 .error-message{
                     color: red;
-                    float: right;
-                    margin-bottom: 10px;
-                    width: 200px;
+                    text-align: right;
+                    width: 30%;
                 }
-                .text-field{
+                .sources{
+                    margin-left: 40px;
+                }
+                /*.text-field{
                     float: left;
                     padding-right: 10px;
-                    width: 244px;
                     text-align: right;
                 }
                 .example-text{
-                    text-align: right;
-                    width: 440px;
-                }
+                    padding-left: 20px;
+                    text-align: center;
+                    width: 100%;
+                }*/
                 .go-button{
                     float: right;
                     margin-right: 88px;
@@ -54,7 +56,7 @@
                 }
                 input[type="text"] {
                     float: left;
-                    width: 30%;
+                    width: 35%;
                     display: block;
                     margin-bottom: 10px;
                     background-color: wheat;
@@ -69,48 +71,86 @@
                     font-weight: bold;
                     font-size: 18px;
                 }
-                .fa-cog:before{content:"\f013"}
-                .fa-3x {font-size: 3em;}
-                .fa {
-                        display: inline-block;
-                        font-family: FontAwesome;
-                        font-feature-settings: normal;
-                        font-kerning: auto;
-                        font-language-override: normal;
-                        font-size: inherit;
-                        font-size-adjust: none;
-                        font-stretch: normal;
-                        font-style: normal;
-                        font-synthesis: weight style;
-                        font-variant: normal;
-                        font-weight: normal;
-                        line-height: 1;
-                        text-rendering: auto;
-                        transform: translate(0px, 0px);
-                    }
-                    #loading {
-                        font-size: 70px;
-                        font-weight: bold;
-                        color: #000;
-                        width: 100%;
-                        height: 100%;
-                        top: 0px;
-                        left: 0px;
-                        position: fixed;
+                #loading {
+                    font-size: 70px;
+                    font-weight: bold;
+                    color: #000;
+                    width: 100%;
+                    height: 100%;
+                    top: 0px;
+                    left: 0px;
+                    position: fixed;
+                    display: block;
+                    opacity: 0.7;
+                    background-color: #fff;
+                    z-index: 99;
+                    text-align: center;
+                }
+                #loading-image {
+                   position: absolute;
+                   top: 100px;
+                   left: 240px;
+                   z-index: 100;
+                }
+                .button
+		{
+			color: #fff;
+			text-decoration: none;
+			display: inline-block;
+			padding: 4px 10px;
+			-webkit-border-radius: 5px;
+			font: normal 14px/16px Helvetica, Arial, sans-serif;
+		}
+		
+		.button.black {
+			background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7d828c),color-stop(0.5, #303749), color-stop(0.5, #121a2e), to(#121a2e));
+			border: 5px solid rgba(255, 255, 255, 1);
+                        border-radius: 25px 0 0 25px;
+		}
+		.button.black:hover {
+			background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, 
+				from(#4286f5), 
+				color-stop(0.5, #4286f5),
+				color-stop(0.5, #194fdb),
+				to(#194fdb));
+		}
+		.button.back {
+			position: relative;
+			padding-left: 5px;
+			margin-left: 8px;
+		}
+		.back.black > span {
                         display: block;
-                        opacity: 0.7;
-                        background-color: #fff;
-                        z-index: 99;
-                        text-align: center;
-                     }
-
-                     #loading-image {
-                       position: absolute;
-                       top: 100px;
-                       left: 240px;
-                       z-index: 100;
-                     }
-
+                        height: 20px;
+                        width: 20px;
+                        background-image: -webkit-gradient(linear, left top, right bottom, 
+                               from(#7d828c),
+                               color-stop(0.5, #303749), 
+                               color-stop(0.5, #121a2e), 
+                               to(#121a2e));
+                        border-left: solid 1px rgba(79, 79, 79, 0.75);
+                        border-bottom: solid 1px rgba(79, 79, 79, 0.75);
+                       -webkit-transform: rotate(45deg);
+                       -webkit-mask-image: -webkit-gradient(linear, left bottom, right top, 
+                               from(#000000), 
+                               color-stop(0.5,#000000), 
+                               color-stop(0.5, transparent), 
+                               to(transparent));
+                 }
+		.back:hover > span {
+			background-image: -webkit-gradient(linear, left top, right bottom, 
+				from(#4286f5), 
+				color-stop(0.5, #4286f5),
+				color-stop(0.5, #194fdb),
+				to(#194fdb));
+		}
+                .arrow-left {
+                        border-bottom: 30px solid transparent;
+                        border-right: 30px solid #fff;
+                        border-top: 30px solid transparent;
+                        height: 0;
+                        width: 20px;
+                    }
         </style>
          <script type="text/javascript">
             function checkLoaded(loaded){
@@ -150,6 +190,14 @@
         $bDeleteAdminPayload = isset($_POST['admin_payload']) ? $_POST['admin_payload'] : 0;
         $bDeleteContent = isset($_POST['delete_content']) ? $_POST['delete_content'] : 0;
         
+        if($_POST['infection_resource'] == 'branch_value')
+        {
+            if(empty($sBranchName))
+            {
+                $_SESSION['isValidation']['branch_name'] = 'Please enter branch!!';
+                $_SESSION['isValidation']['flag'] = FALSE;
+            }
+        }
         if($_POST['infection_resource'] == 'infected_device')
         {
             if(empty($sDeviceAddress))
@@ -406,7 +454,6 @@
 
             } else {*/
                 if ($debug) { echo "<h1>Start <b>Teacher Virus</b> infection!</h1>";}
-                if ($debug) { echo "<p>Directory <b>play</b> doesn't exist so continue with Teacher Virus infection<p>"; }
                 // play folder doesn't exist
                 // Check if ip param is set to either an IP address or a url (i.e. without http:// infront)    
                 // $ip="10.1.1.38" or "test.teachervirus.org"
@@ -416,11 +463,25 @@
                     if($debug) {echo "<p>Address has been provided as: $ip</p>"; }
                 } else {
                     $ip="no";
-                    if($debug) { echo "<p> IP Address not provided</p>"; }
                 } // end IP is set check
 
             //} //  END play check
-
+                
+            // Change of file permissions
+            function chmod_r($Path) {
+                $dp = opendir($Path);
+                 while($File = readdir($dp)) {
+                   if($File != "." AND $File != "..") {
+                     if(is_dir($File)){
+                        chmod($File, 0755);
+                        chmod_r($Path."/".$File);
+                     }else{
+                         chmod($Path."/".$File, 0755);
+                     }
+                   }
+                 }
+               closedir($dp);
+            }
             //----------------------------------    
             // Download OATSEA-teachervirus.zip 
             // ------------------------------------
@@ -699,6 +760,7 @@
                     if(!file_exists($newFile))
                     {
                         if (rename($currentFile , $newFile)) {
+                            chmod_r($newFile);
                             if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
                         } else {
                             if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
@@ -839,10 +901,25 @@ if($_SESSION['isValidation']['flag'] == 1)
                     divId.style.display = 'none';
                 }
             }
+            function disableDelete(isInstalledInfect)
+            {
+                if(isInstalledInfect)
+                {
+                    document.getElementById("delete_data").checked = false;
+                    document.getElementById("delete_payload").checked = false;
+                    document.getElementById("admin_payload").checked = false;
+                    document.getElementById("delete_content").checked = false;
+                    document.getElementById("delete_data").value = 0;
+                    document.getElementById("delete_payload").value = 0;
+                    document.getElementById("admin_payload").value = 0;
+                    document.getElementById("delete_content").value = 0;
+                }
+            }
             window.onload = function ()
             {
                 showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : 'branch_value'; ?>");
                 showMain("<?php echo isset($_POST['setting_value']) ? $_POST['setting_value'] : ''?>");
+                disableDelete("<?php echo is_dir($_SERVER['DOCUMENT_ROOT']."/infect") ? 1 : 0; ?>")
             }
             function toggleVisibility(id,inputid) 
             {
@@ -877,38 +954,32 @@ if($_SESSION['isValidation']['flag'] == 1)
                }
             }
         </script>
-    <?php if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) { ?>
-        <div class="color-white">
-            <a class="admin_img" href="<?php echo $protocol.'/admin'; ?>">Back<!--<i class="mainNav fa fa-cog fa-3x"></i> --></a>
-        </div><br/><br/><br/>
-    <?php } // END if installed ?>
-        
+    <?php 
+        if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) 
+        { 
+    ?>
+            <a href="<?php echo $protocol.'/admin'; ?>">
+                <div class="arrow-left"></div>
+            </a>
+    <?php 
+        } 
+    ?>  
         <form method="post" action="" id="getinfected_form">
             <div id="container">
                 <div class="payload-details">
-                    <?php 
-                    //$a = $_SERVER['DOCUMENT_ROOT']."/infect";
-                    //echo $a; exit;
-                    if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) 
-                    { ?>
-                    <h2>Update Teacher Virus</h2>
-                    
-                    <?php 
-                    } 
-                    else
-                    { ?>
-                        <h2>Ready to Get Infected?</h2>
-                    <?php
-                    }
-                    ?>
-                    
+                <?php 
+                    echo is_dir($_SERVER['DOCUMENT_ROOT']."/infect") ? "<h2>Update Teacher Virus</h2>" : "<h2>Ready to Get Infected?</h2>";
+                ?>
                 </div>
                 <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggleVisibility('main','show_settings');"></div><br/>
                 <div id="main" style="display:none">
-                    <div class="text-field"><b>Remove Previous Installation?</b></div>
-                    <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
-                     <br/><br/>
-                     <input type="button" id="show_delete_option" value="Show Delete Option" onclick="toggleDeleteFile('delete_file','show_delete_option');">
+                    <div class="text-field">
+                        <b>Remove Previous Installation?</b>
+                        <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
+                    </div>
+                    <br/><br/>
+                    <input type="button" id="show_delete_option" value="Show Delete Option" onclick="toggleDeleteFile('delete_file','show_delete_option');">
+                    <br/><br/>
                     <div id="delete_file" style="display:none">
                         <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Delete Infecting Files
                         <br/><br/>
@@ -920,32 +991,37 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <br/><br/>
                         <input type="checkbox" name="delete_content" id="delete_content" value="<?php echo isset($_POST['delete_content']) ? $_POST['delete_content'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_content']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_content');" >Delete Content
                         <br/><br/>
-                     </div><br/><br/>
+                     </div>
                     <div>
                         <div style="font-weight:bold;">Infection Source:</div><br/>
-                        <input type="radio" name="infection_resource" value="github" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "github") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
-                        <br/><br/>
+                        <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
+                        <div id="branch_value" style="display:none;" class="sources">
+                            <br/><br/>
+                            <div class="text-field">Branch?<font color="red">*</font></div>
+                            <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : 'master'; ?>" name="branch_name" id="branch_name">
+                            <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
+                            <div class="error-message">
+                                <?php echo isset($_SESSION['isValidation']['branch_name']) ? $_SESSION['isValidation']['branch_name'] : '';?>
+                            </div>
+                        </div><br/><br/>
                         <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
                     </div><br/><br/>
-                    <div id="branch_value" style="display:none">
-                        <div class="text-field">Branch?</div>
-                        <input type="text" value="master" name="branch_name" id="branch_name">
-                        <input type="button" value="Clear" onclick="removePort('branch_name');"/>
-                    </div>
-                    <div id="infected_device" style="display:none">
-                        <div class="text-field">Infected Device Address <font color="red">*</font> :</div>
+                    
+                    <div id="infected_device" style="display:none;" class="sources">
+                        <div class="text-field">Infected Device Address <font color="red">*</font></div>
                         <input type="text" name="device_address">
                         <div class="error-message">
                             <?php echo isset($_SESSION['isValidation']['device_address']) ? $_SESSION['isValidation']['device_address'] : '';?>
                         </div>
-                        <br/><div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 or demo.teachervirus.org</div><br/>
-                        <div class="text-field">Port :</div>
+                        <br/><br/>
+                        <div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 or demo.teachervirus.org</div><br/>
+                        <div class="text-field">Port</div>
                         <input type="text" name="port_number" id="port_number" value="8080">
                         <input type="button" value="Clear" onclick="removePort('port_number');"/>
                         <!--&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="removePort();"><i class="fa fa-eraser"></i></a>
                         <br/><br/>-->
-                         <br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
-                    </div><br/>
+                        <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
+                    </div><br/><br/>
                     <div>
                         <b>Show debug text</b>
                         <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : '0'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
