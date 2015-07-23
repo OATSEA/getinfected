@@ -466,22 +466,7 @@
                 } // end IP is set check
 
             //} //  END play check
-                
-            // Change of file permissions
-            function chmod_r($Path) {
-                $dp = opendir($Path);
-                 while($File = readdir($dp)) {
-                   if($File != "." AND $File != "..") {
-                     if(is_dir($File)){
-                        chmod($File, 0755);
-                        chmod_r($Path."/".$File);
-                     }else{
-                         chmod($Path."/".$File, 0755);
-                     }
-                   }
-                 }
-               closedir($dp);
-            }
+            
             //----------------------------------    
             // Download OATSEA-teachervirus.zip 
             // ------------------------------------
@@ -760,7 +745,7 @@
                     if(!file_exists($newFile))
                     {
                         if (rename($currentFile , $newFile)) {
-                            chmod_r($newFile);
+                            chmod($newFile, 0755);
                             if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
                         } else {
                             if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
@@ -903,7 +888,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
             function disableDelete(isInstalledInfect)
             {
-                if(isInstalledInfect)
+                if(isInstalledInfect == 1)
                 {
                     document.getElementById("delete_data").checked = false;
                     document.getElementById("delete_payload").checked = false;
