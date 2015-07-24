@@ -939,11 +939,11 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
         </script>
     <?php 
-        if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) 
+        if (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) 
         { 
     ?>
             <a href="<?php echo $protocol.'/admin'; ?>">
-                <div class="arrow-left"></div>
+                <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
             </a>
     <?php 
         } 
