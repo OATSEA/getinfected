@@ -981,7 +981,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
                         <div id="branch_value" style="display:none;" class="sources">
                             <br/><br/>
-                            <div class="text-field">Branch?<font color="red">*</font></div>
+                            <div class="text-field">Branch? <font color="red">*</font></div>
                             <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : 'master'; ?>" name="branch_name" id="branch_name">
                             <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
                             <div class="error-message">
