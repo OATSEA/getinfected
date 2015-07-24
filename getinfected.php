@@ -1,6 +1,8 @@
 <?php 
     if(session_status()!=PHP_SESSION_ACTIVE) session_start();
     error_reporting(E_ALL ^ E_WARNING);
+    $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+    $protocol .= "://" . $_SERVER['HTTP_HOST'];
 ?>
 <html>
     <head>
@@ -39,6 +41,7 @@
                     width: 100%;
                 }*/
                 .go-button{
+                    color: #000;
                     float: right;
                     margin-right: 88px;
                     width: 60px;
@@ -50,11 +53,16 @@
                     padding-right: 20px;
                     padding-top: 10px;
                 }
+                a { color: #fff;}
                 .color-white{
                     color: #fff;
                     line-height: 15px;
                 }
+                .mainNav:hover {
+                        color: blue;
+                    }
                 input[type="text"] {
+                    color: #000;
                     float: left;
                     width: 35%;
                     display: block;
@@ -174,8 +182,6 @@
 <?php
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
     $installed=0;
-    $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-    $protocol .= "://" . $_SERVER['HTTP_HOST'];
     
     $_SESSION['isValidation']['flag'] = TRUE;
     if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_SESSION['isValidation']))
@@ -813,7 +819,7 @@ if($_SESSION['isValidation']['flag'] == 1)
     if($_SESSION['isValidation']['flag'] == 1 || count($_SESSION['isValidation']) > 1)
     {
         $_SESSION['isLoggedIn'] = isset($_SESSION['isLoggedIn']) ? $_SESSION['isLoggedIn'] : FALSE;
-        if((is_dir($_SERVER['DOCUMENT_ROOT']."/infect") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
+        if((is_dir($_SERVER['DOCUMENT_ROOT']."/admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off") ? "https" : "http";
             $protocol .= "://" . $_SERVER['HTTP_HOST'] . '/admin';
@@ -903,7 +909,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             {
                 showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : 'branch_value'; ?>");
                 showMain("<?php echo isset($_POST['setting_value']) ? $_POST['setting_value'] : ''?>");
-                disableDelete("<?php echo is_dir($_SERVER['DOCUMENT_ROOT']."/infect") ? 1 : 0; ?>")
+                disableDelete("<?php echo is_dir($_SERVER['DOCUMENT_ROOT']."/admin") ? 1 : 0; ?>")
             }
             function toggleVisibility(id,inputid) 
             {
@@ -939,12 +945,15 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
         </script>
     <?php 
-        if (is_dir($_SERVER['DOCUMENT_ROOT']."/infect")) 
-        { 
+        if (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) 
+        {
     ?>
-            <a href="<?php echo $protocol.'/admin'; ?>">
-                <div class="arrow-left"></div>
-            </a>
+            <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+            <div class="color-white">
+                <a class="play_img" href="<?php echo $protocol.'/admin'; ?>">
+                    <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
+                </a>
+            </div><br/><br/>
     <?php 
         } 
     ?>  
@@ -952,30 +961,41 @@ if($_SESSION['isValidation']['flag'] == 1)
             <div id="container">
                 <div class="payload-details">
                 <?php 
-                    echo is_dir($_SERVER['DOCUMENT_ROOT']."/infect") ? "<h2>Update Teacher Virus</h2>" : "<h2>Ready to Get Infected?</h2>";
+                    echo is_dir($_SERVER['DOCUMENT_ROOT']."/admin") ? "<h2>Update Teacher Virus</h2>" : "<h2>Ready to Get Infected?</h2>";
                 ?>
                 </div>
-                <div><input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggleVisibility('main','show_settings');"></div><br/>
+                <div>
+                    <input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggleVisibility('main','show_settings');">
+                </div><br/>
                 <div id="main" style="display:none">
-                    <div class="text-field">
-                        <b>Remove Previous Installation?</b>
-                        <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
-                    </div>
-                    <br/><br/>
-                    <input type="button" id="show_delete_option" value="Show Delete Option" onclick="toggleDeleteFile('delete_file','show_delete_option');">
-                    <br/><br/>
-                    <div id="delete_file" style="display:none">
-                        <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Delete Infecting Files
+                    <?php 
+                        if (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) 
+                        {
+                    ?>
+                        <div class="text-field">
+                            <b>Remove Previous Installation?</b>
+                            <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('remove_previous_install');">
+                        </div>
                         <br/><br/>
-                        <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
+                        <div>
+                            <input type="button" id="show_delete_option" value="Show Delete Option" onclick="toggleDeleteFile('delete_file','show_delete_option');">
+                        </div>
                         <br/><br/>
-                        <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads
-                        <br/><br/>
-                        <input type="checkbox" name="admin_payload" id="admin_payload" value="<?php echo isset($_POST['admin_payload']) ? $_POST['admin_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['admin_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('admin_payload');">Delete Admin Payloads
-                        <br/><br/>
-                        <input type="checkbox" name="delete_content" id="delete_content" value="<?php echo isset($_POST['delete_content']) ? $_POST['delete_content'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_content']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_content');" >Delete Content
-                        <br/><br/>
-                     </div>
+                        <div id="delete_file" style="display:none">
+                            <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Delete Infecting Files
+                            <br/><br/>
+                            <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
+                            <br/><br/>
+                            <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads
+                            <br/><br/>
+                            <input type="checkbox" name="admin_payload" id="admin_payload" value="<?php echo isset($_POST['admin_payload']) ? $_POST['admin_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['admin_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('admin_payload');">Delete Admin Payloads
+                            <br/><br/>
+                            <input type="checkbox" name="delete_content" id="delete_content" value="<?php echo isset($_POST['delete_content']) ? $_POST['delete_content'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_content']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_content');" >Delete Content
+                            <br/><br/>
+                        </div>
+                    <?php
+                        }
+                    ?>
                     <div>
                         <div style="font-weight:bold;">Infection Source:</div><br/>
                         <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
