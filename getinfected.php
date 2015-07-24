@@ -351,7 +351,7 @@
                         if ($debugtxt) { echo "<p>Error: Could not create folder <b>$directory</b> - check file permissions";}
                         $result= false;
                     } else { 
-                        if ($debugtxt) { echo "Folder <b>$directory</b> Created <br>";}  
+                        // if ($debugtxt) { echo "Folder <b>$directory</b> Created <br>";}  
                         $result = true;
                     } // END mkdir
                 } // END if file exists
@@ -587,7 +587,7 @@
                             echo "<p> HTTP Status of: $http_status (200 is good)</p>";
                             echo "<p> CURL error: ".curl_error($ch)." ...</p>";
                             if (file_exists($zipfile)) {
-                                echo "<p> Destination $zipfile file was created though</p>";
+                                // echo "<p> Destination $zipfile file was created though</p>";
                             }   else {
                                 echo "<p> Destination $zipfile file was <b>NOT</b> created - file permission issue? </p>";
                             }
@@ -687,7 +687,7 @@
             // $startingloc = $temp_unzip_path.'/'.$subfolder;
             $startingloc = $subfolder;
 
-            if($debug) { echo "<p>Files being moved from: $startingloc </p>"; }
+            // if($debug) { echo "<p>Files being moved from: $startingloc </p>"; }
 
             $tally2=0;
 
@@ -745,7 +745,7 @@
                     {
                         if (rename($currentFile , $newFile)) {
                             chmod($newFile, 0755);
-                            if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
+                            // if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
                         } else {
                             if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
                             $result = false;
