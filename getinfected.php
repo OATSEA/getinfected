@@ -405,7 +405,7 @@
                             // Move via rename
                             // rename(oldname, newname)
                             if (rename($currentFile , $newFile)) {
-                                if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
+                                // if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
                             } else {
                                 if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
                                 $result = false;
