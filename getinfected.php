@@ -335,7 +335,7 @@
                 
                 // Create infect directory if it doesn't exist:
                 if (file_exists($directory)) {
-                    if ($debugtxt) { echo "<p>Directory <b>$directory</b> already exists </p>"; }
+                    //if ($debugtxt) { echo "<p>Directory <b>$directory</b> already exists </p>"; }
                     $result = true; // Return true as success is when the directory has either been created or already exists
                 } else {
                     // Make the new temp sub_folder for unzipped files
@@ -388,7 +388,7 @@
                             }
                             // if file already exists remove it
                             if (file_exists($newFile)) {
-                                if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
+                                //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
                                 unlink($newFile);
                             } else {
                                 if($debug) { echo "<p>File $newFile doesn't exist yet</p>"; }
@@ -629,7 +629,7 @@
                     }
                     // if file already exists remove it
                     if (file_exists($newFile) && !is_dir($newFile)) {
-                        if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
+                        //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
                         chmod($newFile, 0777);
                         unlink($newFile);
                     }
@@ -917,7 +917,7 @@
                     }
                     // if file already exists remove it
                     if (file_exists($newFile) && !is_dir($newFile)) {
-                        if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
+                        //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
                         chmod($newFile, 0777);
                         unlink($newFile);
                     }
@@ -929,7 +929,7 @@
                     {
                         if (rename($currentFile , $newFile)) {
                             chmod($newFile, 0755);
-                            if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
+                            //if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
                         } else {
                             if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
                             $result = false;
