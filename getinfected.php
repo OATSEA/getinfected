@@ -343,7 +343,7 @@
                         if ($debugtxt) { echo "<p>Error: Could not create folder <b>$directory</b> - check file permissions";}
                         $result= false;
                     } else { 
-                        if ($debugtxt) { echo "Folder <b>$directory</b> Created <br>";}  
+                        //if ($debugtxt) { echo "Folder <b>$directory</b> Created <br>";}  
                         $result = true;
                     } // END mkdir
                 } // END if file exists
@@ -397,7 +397,7 @@
                             // Move via rename
                             // rename(oldname, newname)
                             if (rename($currentFile , $newFile)) {
-                                if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
+                                //if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
                             } else {
                                 if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
                                 $result = false;
@@ -583,14 +583,14 @@
             // $startingloc = $temp_unzip_path.'/'.$subfolder;
             $startingloc = $subfolder;
 
-            if($debug) { echo "<p>Files being moved from: $startingloc </p>"; }
+            //if($debug) { echo "<p>Files being moved from: $startingloc </p>"; }
 
             $tally2=0;
 
             $subfolder = realpath($subfolder);
-            if($debug) { echo "<p>Real Path is : $subfolder </p>"; }
+            //if($debug) { echo "<p>Real Path is : $subfolder </p>"; }
 
-            if($debug) { echo "<p>Is subfolder directory readable? ".is_readable($subfolder)."</p>";}
+            //if($debug) { echo "<p>Is subfolder directory readable? ".is_readable($subfolder)."</p>";}
 
             $directory_iterator = new RecursiveDirectoryIterator($subfolder,FilesystemIterator::SKIP_DOTS);
 
@@ -601,7 +601,7 @@
               foreach($fileSPLObjects as $file) {
                 $tally2 ++;
                     $filename= $file->getFilename();	
-                    if($debug) { echo "<p>Current Filename: $filename </p>"; }
+                    //if($debug) { echo "<p>Current Filename: $filename </p>"; }
 
                     if (($file->isDir())&&(substr( $filename ,0,1) != ".")) {
                     // As it's a directory make sure it exists at destination:
