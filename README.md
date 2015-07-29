@@ -1,43 +1,57 @@
 # getinfected
 
+**Repo:** OATSEA/getinfected
+**Version:** 0.2
+**Author:** Harry Longworth
+**Contributors:** Vishal Simon, Harry Longworth & OATSEA Team
+**Website:** teachervirus.org
+
 ##About
 **getinfected** is the initial teacher virus PHP infection script that is used to install the core teachervirus files.  
 
-If consists of a single file getinfected.php - we're using a single file in order to make the initial copy/move into HTDOC as simple as possible.
+It consists of a single file **getinfected.php** in order to simplify deployment for users. 
 
-Once this file is run the basic Teacher Virus infection should be complete and ready to install payloads as required.
+This file fetches the core Teacher Virus files.  It also enables updates and device to device installation.
 
 **NOTE: ** Teacher Virus is only viral from a philosophical perspective - it can not infect a device without the consent of the administrator/owner of the device (installation action required).
 
 ##For Android:
-The getinfected.php file will be included in the android version as part of the teachervirus.apk   In the android version the first fun of the app will copy this file to the htdocs folder of the local webserver and open it.  Once the installation is complete the app will then default to running from the /play location (via a webview).
+The getinfected.php file is fetched by the android app (teachervirus.apk).
 
 ##For Other Devices
-Teacher Virus operates on any devices with a compatible webserver (HTML/PHP/SQLite) and sufficient rights
+Teacher Virus operates on any devices with a compatible webserver (HTML/PHP/SQLite) and sufficient rights.
 
-For installation on these devices the getinfected.php file needs to be placed in the root of the webserver's public folder (i.e. htdocs) and opened. If there is no "play" folder then it will install. 
+For installation on these devices the getinfected.php file needs to be placed in the root of the webserver's public folder (i.e. htdocs) and opened. 
 
 ##Assumptions
 To keep things simple we make the following assumptions at this point:
 * getinfected.php will be in the root folder of the webserver.
 
-##Getting Technical 
-The getinfected.php script does the following (in basically this order):
+##What's New? 
+With version 0.2 we introduce the following improvements:
+* ability to select which branch to install from github
+* ability to remove the previous installation
+* ability to selectively delete components of the previous installation - for example you now have the ability to not delete the data folder so that the administrator password is kept or not delete payload folders so that payloads don't have to be downloaded again.
+* ability to reinstall using the version of Teacher Virus previously downloaded so that you don't have to re-download it again when you're just doing a reinstall to get back to a clean build.
+* better error handling.
+* alternative download mechanisims (CURL and Copy) to handle device compatibility issues.
+* ability to control debug text so that you can show or not show detailed installation comments.
+* ability to install from an infected device based on url or IP address and to set the port required by that device (e.g. 8080 for androids or no port for standard webservers working on port 80)
+* access to getinfected.php is now controlled by pattern lock security if Teacher Virus is already installed (based on use of 0.2 version of Teacher Virus)
+* back button to return to the admin interface if Teacher Virus is already installed
 
-* checks to see if there is a 'play' directory.  
-  - If yes: Displays alert advising that it looks like there is already an installation of teachervirus - if you want to reinstall remove the play directory and then provides link to 'play' directory rather than install. 
-  - If no: commences install:
-* Checks to see if the 'ip' param exists:
-  - if yes: then download step will use that source (expects just IP address) instead of github.
-* Creates a folder called 'infect' in the same folder as the getinfected script 
-  - checks folder is created if not provides error message suggesting possibility of insufficient rights.
-* checks if github server or ip is accessible [Curl?] if not then provides error message advising unable to contact source of infection. 
-  - prompts user to enter alternative infectious device IP address (and advice on how to find that) and reloads page with that setting as the ip param 
-* Downloads OATSEA-teachervirus.zip into the 'infect' folder either from OATSEA/teachervirus through github zipball/master or from ip address (file is left in this folder so that it is there to then infect others).
+##Wishlist Issues
+We are always looking for suggestions and feedback on each release so that we can prioritise functionality required for the next sprint.  At the moment we are looking at working on the following capabilities for the next phase of development:
 
-* unzips downloaded infect/OATSEA-teachervirus.zip into a unique temporary folder
-* moves (via rename) files into the same location as the getinfected script (should be root).
- - checks if folders & files already exist & deletes them before attempting to move [ not working - needs investigation ]
-* moves infected.php.zip, android.apk and droidPHP.apk into 'infect' folder 
-* redirects to 'admin' folder for initial configuration (i.e. set password and other various configurations)
+* simplification of Android deployment by integration of the webserver component with the Android webapp with the goal of publishing the platform to Google Play to simplify deployment.
+* ability to update getinfected.php and determine the need to do so.
+* ability to check for availability of "updates" to Teacher Virus based on version.
+* ability to install based on release version rather than just branch (default is master branch)
+* multi-lingual interface (and a Swahili version of the interface in order to meet the requirements of the Global Learning XPRIZE)
+
+##Known Issues:
+* There known deployment issues with Android version 5 that we are investigating
+* Further investigation required into security aspects of use on public webservers
+
+
 
