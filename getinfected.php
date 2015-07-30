@@ -183,6 +183,7 @@
     </script>
 <?php
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
+    $bChmod = isset($_POST['chmod']) ? $_POST['chmod'] : 0;
     $installed=0;
     
     $_SESSION['isValidation']['flag'] = TRUE;
@@ -630,7 +631,7 @@
                     // if file already exists remove it
                     if (file_exists($newFile) && !is_dir($newFile)) {
                         //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
-                        chmod($newFile, 0777);
+                        ($bChmod) ? chmod($newFile, 0777) : '';
                         unlink($newFile);
                     }
 
@@ -640,7 +641,7 @@
                     if(!file_exists($newFile))
                     {
                         if (rename($currentFile , $newFile)) {
-                            chmod($newFile, 0755);
+                            ($bChmod) ? chmod($newFile, 0755) : '';
                             //if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
                         } else {
                             if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
@@ -918,7 +919,7 @@
                     // if file already exists remove it
                     if (file_exists($newFile) && !is_dir($newFile)) {
                         //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
-                        chmod($newFile, 0777);
+                        ($bChmod) ? chmod($newFile, 0777) : '';
                         unlink($newFile);
                     }
 
@@ -928,7 +929,7 @@
                     if(!file_exists($newFile))
                     {
                         if (rename($currentFile , $newFile)) {
-                            chmod($newFile, 0755);
+                            ($bChmod) ? chmod($newFile, 0755) : '';
                             //if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
                         } else {
                             if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
@@ -1032,12 +1033,10 @@ if($_SESSION['isValidation']['flag'] == 1)
                 }
                 if(boxId == "remove_previous_install")
                 {
-//                    document.getElementById("infect_files").checked = false;
                     document.getElementById("delete_data").checked = true;
                     document.getElementById("delete_payload").checked = true;
                     document.getElementById("admin_payload").checked = true;
                     document.getElementById("delete_content").checked = true;
-//                    document.getElementById("infect_files").value = 0;
                     document.getElementById("delete_data").value = 1;
                     document.getElementById("delete_payload").value = 1;
                     document.getElementById("admin_payload").value = 1;
@@ -1107,13 +1106,11 @@ if($_SESSION['isValidation']['flag'] == 1)
                 if (divId.style.display == 'block' || divId.style.display=='')
                 {
                     buttonId.value= 'Show Advanced Settings';
-                    //e.value = 'Hide Advanced Settings';
                     divId.style.display = 'none';
                 }
                 else 
                 {
                     buttonId.value= 'Hide Advanced Settings';
-                    //e.value = 'Show Advanced Settings';
                     divId.style.display = 'block';
                 }
             }
@@ -1171,7 +1168,6 @@ if($_SESSION['isValidation']['flag'] == 1)
                         </div>
                         <br/>
                         <div id="delete_file" style="display:none">
-<!--                            <input type="checkbox" name="infect_files" id="infect_files" value="<?php echo isset($_POST['infect_files']) ? $_POST['infect_files'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['infect_files']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('infect_files');">Delete Infecting Files-->
                             <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
                             <br/><br/>
                             <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads
@@ -1216,13 +1212,16 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <div class="text-field">Port</div>
                         <input type="text" name="port_number" id="port_number" value="8080">
                         <input type="button" value="Clear" onclick="removePort('port_number');"/>
-                        <!--&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="removePort();"><i class="fa fa-eraser"></i></a>
-                        <br/><br/>-->
                         <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
                     </div><br/><br/>
                     <div>
                         <b>Show debug text</b>
                         <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : '0'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
+                    </div>
+                    <br/>
+                    <div>
+                        <b>Chmod?</b>
+                        <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : '0'; ?>" <?php echo isset($_POST['chmod']) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
                     </div>
                      <br/>
                     <div class="mandatory"><font color="red">*</font> indicates mandatory field</div>
