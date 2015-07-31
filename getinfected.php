@@ -359,8 +359,8 @@
             //---------
             // Move Directory
 
-            function moveDIR($dir,$dest="") {
-                $debug = 1;
+            function moveDIR($dir,$dest="",$debug) {
+                //$debug = 1;
                 $result=true;
 
                 if($debug) { echo "<h2>Moving directory</h2><p> From:<br> $dir <br>To: $dest</p>";}
@@ -376,7 +376,7 @@
 
                             $newDir = $dest."/".$file;
 
-                            if (!moveDIR($pathFile,$newDir)) {
+                            if (!moveDIR($pathFile,$newDir,$debug)) {
                                 $result = false;
                             }
 
@@ -673,7 +673,7 @@
 
                 if($debug) { echo "<p>Moving files from<br>  $subfolder <br> to: $destination</p>"; }
 
-                if (moveDIR($subfolder,$destination)) {
+                if (moveDIR($subfolder,$destination,$debug)) {
                     if($debug) { echo "<h2>Move Succeeded!</h2>"; }
                 } else {
                     if($debug) { "<h2>ERROR! Move Failed!</h2><p>Infection Failed</p>"; }
@@ -977,7 +977,7 @@
 
                 if($debug) { echo "<p>Moving files from<br>  $subfolder <br> to: $destination</p>"; }
 
-                if (moveDIR($subfolder,$destination)) {
+                if (moveDIR($subfolder,$destination,$debug)) {
                     if($debug) { echo "<h2>Move Succeeded!</h2>"; }
                 } else {
                     if($debug) { "<h2>ERROR! Move Failed!</h2><p>Infection Failed</p>"; }
