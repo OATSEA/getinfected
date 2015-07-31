@@ -177,7 +177,11 @@
         </script>
     </head>
     <body class="main" onload="checkLoaded(false);">
-    <div id="loading">Loading...</div>
+    <div id="loading">
+        <?php 
+            echo (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) ? "Updating..." : "Installing...";
+        ?>
+    </div>
     <script>
         checkLoaded(false);
     </script>
@@ -788,7 +792,23 @@
                         // As download failed delete empty zip file!
                         if ($debug) { echo "<h2>Download with CURL failed</h2>";}
                         echo "<h3>Infection Failed!</h3><p>Couldn't download with either copy or curl</p>";
-                        unlink($zipfile);
+                        if (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) 
+                        {
+                            echo '<link href="'.$protocol.'/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+                                    <div class="color-white">
+                                        <a class="play_img" href="'.$protocol.'/getinfected.php">
+                                            <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
+                                        </a>
+                                    </div><br/><br/>';
+                        }
+                        else
+                        {
+                            echo '<div class="color-white">
+                                        <a class="play_img" href="'.$protocol.'/getinfected.php">Back..</a>
+                                    </div><br/><br/>';
+                        }
+                        
+                        unlink($_SERVER['DOCUMENT_ROOT'].'/'.$zipfile);
                         //promptForIP();
                     } // If Download failed using CURL 
                 }// END else CURL
