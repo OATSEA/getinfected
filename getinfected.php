@@ -25,7 +25,7 @@
                 .error-message{
                     color: red;
                     text-align: right;
-                    width: 30%;
+                    width: 20%;
                 }
                 .sources{
                     margin-left: 40px;
@@ -160,7 +160,12 @@
                         border-top: 30px solid transparent;
                         height: 0;
                         width: 20px;
-                    }
+                }
+                .radio_class
+                {
+                   margin: 10px 0px 10px 4px; 
+                }
+                
         </style>
          <script type="text/javascript">
             function checkLoaded(loaded){
@@ -179,6 +184,7 @@
     <body class="main" onload="checkLoaded(false);">
     <div id="loading">
         <?php 
+        
             echo (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) ? "Updating..." : "Installing...";
         ?>
     </div>
@@ -189,22 +195,24 @@
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
     $bChmod = isset($_POST['chmod']) ? $_POST['chmod'] : 0;
     $installed=0;
-    
     $_SESSION['isValidation']['flag'] = TRUE;
     if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_SESSION['isValidation']))
     {
         $bRemovePreviousInstall = isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : 0;
         $bDownloadLatestVersion = isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : 0;
-        $sBranchName = $_POST['branch_name'];
-        $sDeviceAddress = $_POST['device_address'];
-        $nPort = $_POST['port_number'];
+        $sBranchName = isset($_POST['branch_name']) ? $_POST['branch_name'] : '';
+        $sDeviceAddress = isset($_POST['device_address']) ? ($_POST['device_address']):'';
+        $sFileName = isset($_FILES['upload_file']['name']) ? ($_FILES['upload_file']['name']):'';
+        $sTempFileName = isset($_FILES['upload_file']['tmp_name'])? ($_FILES['upload_file']['tmp_name']):'';
+        $nPort = isset($_POST['port_number']) ? $_POST['port_number']:'';
         $bInfectFiles = isset($_POST["infect_files"]) ? $_POST["infect_files"] : 0;
         $bDeleteData = isset($_POST["delete_data"]) ? $_POST["delete_data"] : 0;
         $bDeletePayload = isset($_POST['delete_payload']) ? $_POST['delete_payload'] : 0;
         $bDeleteAdminPayload = isset($_POST['admin_payload']) ? $_POST['admin_payload'] : 0;
         $bDeleteContent = isset($_POST['delete_content']) ? $_POST['delete_content'] : 0;
+        $sInfectionResource = isset($_POST['infection_resource']) ? $_POST['infection_resource'] : '';
         
-        if($_POST['infection_resource'] == 'branch_value')
+        if($sInfectionResource == 'branch_value')
         {
             if(empty($sBranchName))
             {
@@ -212,11 +220,19 @@
                 $_SESSION['isValidation']['flag'] = FALSE;
             }
         }
-        if($_POST['infection_resource'] == 'infected_device')
+        if($sInfectionResource == 'infected_device')
         {
             if(empty($sDeviceAddress))
             {
                 $_SESSION['isValidation']['device_address'] = 'Please enter device address!!';
+                $_SESSION['isValidation']['flag'] = FALSE;
+            }
+        }
+        if($sInfectionResource == 'file_browse')
+        {
+            if(empty($sFileName))
+            {
+                $_SESSION['isValidation']['upload_file'] = 'Please Choose File!!';
                 $_SESSION['isValidation']['flag'] = FALSE;
             }
         }
@@ -244,23 +260,6 @@
             }
         if($_SESSION['isValidation']['flag'] == 1)
         {
-//            if($bRemovePreviousInstall)
-//            {
-//                rrmdir('admin');
-//                rrmdir('content');
-//                rrmdir('css');
-//                rrmdir('data');
-//                rrmdir('images');
-//                rrmdir('infect');
-//                rrmdir('js');
-//                rrmdir('payloads');
-//                rrmdir('play');
-//                (file_exists('index.html')) ? unlink('index.html') : '';
-//                (file_exists('README.md')) ? unlink('README.md') : '';
-//                (file_exists('testingpayloads.html')) ? unlink('testingpayloads.html') : '';
-//            }
-//            else
-//            {
             if($bDownloadLatestVersion)
             {
                 if($bInfectFiles)
@@ -474,13 +473,17 @@
             if (!makeDIR($infect,$debug)) { 
                     // failed to make directory so exit
                     exit("<h3>Infection Failed!</h3>");
+                    
             }
-
+            if($sInfectionResource == 'file_browse')
+            {
+                move_uploaded_file($sTempFileName, $_SERVER['DOCUMENT_ROOT'].'/'.$infect.'/'.$sFileName);
+            }
             // Github repository details for Teacher Virus core  
             $username="OATSEA";
             $repo="teachervirus";
-
-            $download_filename = $username."-".$repo.".zip";
+             
+            $download_filename = (empty($sFileName)) ? $username."-".$repo.".zip" : $sFileName;
             $infectdir = $infect.'/'; // infect directory with trailing slash for URL use
 
             $zipfile = $infectdir.$download_filename;
@@ -1013,7 +1016,7 @@
         }
     }
 if($_SESSION['isValidation']['flag'] == 1) 
-        unset($_SESSION['isValidation']['user_name_required'],$_SESSION['isValidation']['repository_required']);
+        unset($_SESSION['isValidation']['user_name_required'],$_SESSION['isValidation']['repository_required'],$_SESSION['isValidation']['branch_name'],$_SESSION['isValidation']['device_address'],$_SESSION['isValidation']['upload_file']);
 
     if($_SESSION['isValidation']['flag'] == 1 || count($_SESSION['isValidation']) > 1)
     {
@@ -1034,11 +1037,19 @@ if($_SESSION['isValidation']['flag'] == 1)
                 {
                   document.getElementById("infected_device").style.display = "block";
                   document.getElementById("branch_value").style.display = "none";
+                  document.getElementById("file_browse").style.display = "none";
                 }
                 else if(divId == "branch_value")
                 {
                     document.getElementById("infected_device").style.display = "none";
                     document.getElementById("branch_value").style.display = "block";
+                    document.getElementById("file_browse").style.display = "none";
+                }
+                else if(divId == "file_browse")
+                {
+                  document.getElementById("file_browse").style.display = "block";
+                  document.getElementById("branch_value").style.display = "none";
+                  document.getElementById("infected_device").style.display = "none";
                 }
             }
             function changeValue(boxId)
@@ -1163,7 +1174,7 @@ if($_SESSION['isValidation']['flag'] == 1)
     <?php 
         } 
     ?>  
-        <form method="post" action="" id="getinfected_form">
+        <form method="post" action="" id="getinfected_form" enctype="multipart/form-data">
             <div id="container">
                 <div class="payload-details">
                 <?php 
@@ -1179,8 +1190,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         {
                     ?>
                         <div class="text-field">
-                            <b>Remove Current Installation?</b>
-                            <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('remove_previous_install');">
+                            <b><input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('remove_previous_install');">  Remove Current Installation?</b>
                         </div>
                         <br/><br/>
                         <div>
@@ -1199,27 +1209,26 @@ if($_SESSION['isValidation']['flag'] == 1)
                         </div>
                         <br/>
                         <div class="text-field">
-                            <b>Download Latest Version?</b>
-                            <input type="checkbox" name="download_latest_version" id="download_latest_version" value="<?php echo isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['download_latest_version']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('download_latest_version');">
+                            <b><input type="checkbox" name="download_latest_version" id="download_latest_version" value="<?php echo isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['download_latest_version']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('download_latest_version');">  Download Latest Version?</b>
                         </div>
                         <br/>
                     <?php
                         }
                     ?>
-                        <div id="infection_sources">
+                    <div id="infection_sources">
                         <div style="font-weight:bold;">Infection Source:</div><br/>
-                        <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
+                        <input type="radio" class="radio_class" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');"> GitHub
                         <div id="branch_value" style="display:none;" class="sources">
-                            <br/><br/>
+                            <br/>
                             <div class="text-field">Branch?<font color="red">*</font></div>
                             <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : 'master'; ?>" name="branch_name" id="branch_name">
                             <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
                             <div class="error-message">
                                 <?php echo isset($_SESSION['isValidation']['branch_name']) ? $_SESSION['isValidation']['branch_name'] : '';?>
                             </div>
-                        </div><br/><br/>
-                        <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
-                    </div><br/><br/>
+                        </div><br/>
+                        <input type="radio" class="radio_class" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');"> Infected Device
+                    </div>
                     
                     <div id="infected_device" style="display:none;" class="sources">
                         <div class="text-field">Infected Device Address <font color="red">*</font></div>
@@ -1233,23 +1242,31 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <input type="text" name="port_number" id="port_number" value="8080">
                         <input type="button" value="Clear" onclick="removePort('port_number');"/>
                         <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
-                    </div><br/><br/>
+                    </div>
                     <div>
-                        <b>Show debug text</b>
-                        <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : '0'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
+                        <input type="radio" class="radio_class"  name="infection_resource" value="file_browse" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "file_browse" ) ? "checked='checked'" : ""; ?> onclick="showData('file_browse');"> File Upload
+                    </div>
+                    <div id="file_browse" style="display:none;" class="sources">
+                        <div class="radio_class">
+                            <input type="file" name="upload_file" value="Browse">
+                        </div>
+                        <div class="error-message">
+                            <?php echo isset($_SESSION['isValidation']['upload_file']) ? $_SESSION['isValidation']['upload_file'] : '';?>
+                        </div>
+                    </div>
+                    <div>
+                        <b><input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : '0'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">  Show debug text</b>
                     </div>
                     <br/>
                     <div>
-                        <b>Chmod?</b>
-                        <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : '0'; ?>" <?php echo isset($_POST['chmod']) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
+                        <b><input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : '0'; ?>" <?php echo isset($_POST['chmod']) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">  Chmod?</b>
                     </div>
                      <br/>
                     <div class="mandatory"><font color="red">*</font> indicates mandatory field</div>
                 </div>
-                
-                <div class="go-button">
-                    <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
-                </div><br/>    
+                    <div class="go-button">
+                        <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
+                    </div><br/>    
             </div>
             <input type="hidden" name="setting_value" id="setting_value">
         </form>
