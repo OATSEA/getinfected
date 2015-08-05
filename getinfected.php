@@ -165,6 +165,9 @@
                 {
                    margin: 10px 0px 10px 4px; 
                 }
+                a{
+                    text-decoration: none;
+                }
                 
         </style>
          <script type="text/javascript">
@@ -492,16 +495,8 @@
             // ** TO DO **
             
             // Download file if OATSEA-teachervirus.zip doesn't already exist
-            if (file_exists($zipfile) && $bDownloadLatestVersion == 0) {
-                //$installed = 1;
-//                if ($debug) { 
-//                    echo "<p>The Teacher Virus files have already been downloaded to: $zipfile</p>
-//                    <p>This infection will use the existing file rather than downloading a new version of Teacher Virus.</p>
-//                    <p><b>Hint:</b> If you want to download a new version of Teacher Virus you will need to:</br>
-//                    * delete the file: <b>$zipfile</b>.</br>
-//                    * remove the <b>play</b> folder if it exists</br>
-//                    * refresh/re-open <b>getinfected.php</b></p>"; 
-//                } // END Debug
+            if (file_exists($zipfile) && $bDownloadLatestVersion == 0) 
+            {
                 $geturl = $protocol.'/'.$zipfile;
                 
                 // TRY DOWNLOAD via copy
@@ -514,187 +509,187 @@
                 $copyflag = TRUE;
                 
                
-            // ---------------------
-            // UNZIP downloaded file
-            // ---------------------
+                // ---------------------
+                // UNZIP downloaded file
+                // ---------------------
 
-            // Code Attribution: 
-            // http://stackoverflow.com/questions/8889025/unzip-a-file-with-php
+                // Code Attribution: 
+                // http://stackoverflow.com/questions/8889025/unzip-a-file-with-php
 
-            if ($debug) {echo "<h2>Attempting to Unzip</h2><p>Zipped file:  $zipfile </p>";}
+                if ($debug) {echo "<h2>Attempting to Unzip</h2><p>Zipped file:  $zipfile </p>";}
 
-            // get the absolute path to $file - not used as using location of script instead
-            // $path = pathinfo(realpath($zipfile), PATHINFO_DIRNAME);
+                // get the absolute path to $file - not used as using location of script instead
+                // $path = pathinfo(realpath($zipfile), PATHINFO_DIRNAME);
 
-            // Create full temp sub_folder path
-            $temp_unzip_path = uniqid('unzip_temp_', true)."/";
+                // Create full temp sub_folder path
+                $temp_unzip_path = uniqid('unzip_temp_', true)."/";
 
-            if($debug) { echo "Temp Unzip Path is: ".$temp_unzip_path."<br>"; }
+                if($debug) { echo "Temp Unzip Path is: ".$temp_unzip_path."<br>"; }
 
-            // Make the new temp sub_folder for unzipped files
-            if (!mkdir($temp_unzip_path, 0755, true)) {
-                exit("<h2>Error - Infection Failed!</h2><p> Could not create unzip folder: $temp_unzip_path</p><p>File security or permissions issue?");
-            } else { 
-                if($debug) { echo "<p>Temp unzip Folder Created! <br>"; }
-            }
+                // Make the new temp sub_folder for unzipped files
+                if (!mkdir($temp_unzip_path, 0755, true)) {
+                    exit("<h2>Error - Infection Failed!</h2><p> Could not create unzip folder: $temp_unzip_path</p><p>File security or permissions issue?");
+                } else { 
+                    if($debug) { echo "<p>Temp unzip Folder Created! <br>"; }
+                }
 
-            umask(0);
-            $zip = new ZipArchive;
-            $zipFlag = $zip->open($zipfile);
-            if ($zipFlag == TRUE) {
-                // extract it to the path we determined above
-              $zip->extractTo($temp_unzip_path);
-              // $zip->extractTo($path);
-              $zip->close();
-                if($debug) { echo "<h3>Unzip Successful!</h3><p> $zipfile extracted to $temp_unzip_path </p>"; }
-            } else {
-                exit("<h2>Infection Failed!</h2><p> couldn't open $zipfile </p>");
-            }
-            
-
-            // -------------------------    
-            // Determine Subfolder Name
-            // ------------------------- 
-
-            // GitHub puts all files in an enclosing folder that has a changing suffix every time.
-            // It does this to indicate commits.
-            // As a result we can't assume the name of the folder.
-            // and need to determine the name of the subfolder
-
-            if($debug) { echo "<h2>Determine subfolder</h2><p>Starting from folder: $temp_unzip_path </p>"; }
-            $subfolder='notset';
-
-            $files = scandir($temp_unzip_path);
-
-            $tally=0;
-            foreach($files as $file) {
-                $tally++;
-                // if($debug) {echo "Filename: $file";}
-                if (substr( $file ,0,1) != ".") {
-                    $subfolder=$temp_unzip_path.$file; 
-                } // END if not .
-
-            } // END foreach
-
-            // if($debug) { echo "<p><b>Tally:</b> $tally </p>";}
-            if($debug) { echo "<p>Subfolder is : $subfolder </p>";}
-
-
-            // ----------
-            // Move Files To Root 
-            // ----------
-            // move unzipped files to the same directory as the script (should be root)
-            // Warning/TEST! it probably won't move hidden files?
-
-            if($debug) { echo "<H2>Moving Files</h2>"; }
-
-            // $startingloc = $temp_unzip_path.'/'.$subfolder;
-            $startingloc = $subfolder;
-
-            //if($debug) { echo "<p>Files being moved from: $startingloc </p>"; }
-
-            $tally2=0;
-
-            $subfolder = realpath($subfolder);
-            //if($debug) { echo "<p>Real Path is : $subfolder </p>"; }
-
-            //if($debug) { echo "<p>Is subfolder directory readable? ".is_readable($subfolder)."</p>";}
-
-            $directory_iterator = new RecursiveDirectoryIterator($subfolder,FilesystemIterator::SKIP_DOTS);
-
-            $fileSPLObjects =  new RecursiveIteratorIterator($directory_iterator, RecursiveIteratorIterator::SELF_FIRST,RecursiveIteratorIterator::CATCH_GET_CHILD);
-
-            try {
-
-              foreach($fileSPLObjects as $file) {
-                $tally2 ++;
-                    $filename= $file->getFilename();	
-                    //if($debug) { echo "<p>Current Filename: $filename </p>"; }
-
-                    if (($file->isDir())&&(substr( $filename ,0,1) != ".")) {
-                    // As it's a directory make sure it exists at destination:
-
-                    // Destination:
-                    $newDir = str_replace("/".$startingloc, '', realpath($file));
-                    // if directory doesn't exist then create it
-                    if (!makeDIR($newDir,$debug)) {
-                        if($debug) { echo "<p>Failed to create directory: $newDir</p>"; }
-                    }
+                umask(0);
+                $zip = new ZipArchive;
+                $zipFlag = $zip->open($zipfile);
+                if ($zipFlag == TRUE) {
+                    // extract it to the path we determined above
+                  $zip->extractTo($temp_unzip_path);
+                  // $zip->extractTo($path);
+                  $zip->close();
+                    if($debug) { echo "<h3>Unzip Successful!</h3><p> $zipfile extracted to $temp_unzip_path </p>"; }
                 } else {
-                    // It's a file so move it
-                    // ** TEST: what if directory hasn't been created yet?? or does Recursive always do the directory first
-                    $currentFile = realpath($file); // current location
-                    if(preg_match('/.gitignore/',$currentFile))
-                    {
-                        $aExplodeCurrentFile = explode('.gitignore', $currentFile);
-                        $currentFile = $aExplodeCurrentFile[0];
-                    }
-                    $newFile = str_replace("/".$startingloc, '', realpath($file)); // Destination
-                    if(preg_match('/.gitignore/',$newFile))
-                    {
-                        $aExplodeNewFile = explode('.gitignore', $newFile);
-                        $newFile = $aExplodeNewFile[0];
-                    }
-                    // if file already exists remove it
-                    if (file_exists($newFile) && !is_dir($newFile)) {
-                        //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
-                        ($bChmod) ? chmod($newFile, 0777) : '';
-                        unlink($newFile);
-                    }
+                    exit("<h2>Infection Failed!</h2><p> couldn't open $zipfile </p>");
+                }
 
-                    // Move via rename
-                    // rename(oldname, newname)
-                    //rename($currentFile, $newFile);
-                    if(!file_exists($newFile))
-                    {
-                        if (rename($currentFile , $newFile)) {
-                            ($bChmod) ? chmod($newFile, 0755) : '';
-                            //if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
-                        } else {
-                            if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
-                            $result = false;
-                        } // END rename 
-                    }
-                }// END is Dir or File checks
 
-              } // END foreach
-            } // END Try
-            catch (UnexpectedValueException $e) {
-                echo "<h2>Error Moving Files!</h2>";
-                if($debug) {echo "<p>There was a directory we couldn't get into!</p>";}
-            }
-            if ($debug) {echo "<p>Loop Count: $tally2</p>";}
+                // -------------------------    
+                // Determine Subfolder Name
+                // ------------------------- 
 
-            // --------------------
-            // HANDLE MOVE FAILURE:
-            // IF Tally2 is zero then move failed try alternative method based on scandir
+                // GitHub puts all files in an enclosing folder that has a changing suffix every time.
+                // It does this to indicate commits.
+                // As a result we can't assume the name of the folder.
+                // and need to determine the name of the subfolder
 
-            if ($tally2==0) {
-                if($debug) { echo "<h2>File Move Failed!</h2><p> - Attempting alternative approach</p>"; }
+                if($debug) { echo "<h2>Determine subfolder</h2><p>Starting from folder: $temp_unzip_path </p>"; }
+                $subfolder='notset';
 
-                $destination  = dirname(__FILE__);
+                $files = scandir($temp_unzip_path);
 
-                if($debug) { echo "<p>Moving files from<br>  $subfolder <br> to: $destination</p>"; }
+                $tally=0;
+                foreach($files as $file) {
+                    $tally++;
+                    // if($debug) {echo "Filename: $file";}
+                    if (substr( $file ,0,1) != ".") {
+                        $subfolder=$temp_unzip_path.$file; 
+                    } // END if not .
 
-                if (moveDIR($subfolder,$destination,$debug)) {
-                    if($debug) { echo "<h2>Move Succeeded!</h2>"; }
-                } else {
-                    if($debug) { "<h2>ERROR! Move Failed!</h2><p>Infection Failed</p>"; }
-                } // End moveDIR check
+                } // END foreach
 
-            } // END try alternative move approach
+                // if($debug) { echo "<p><b>Tally:</b> $tally </p>";}
+                if($debug) { echo "<p>Subfolder is : $subfolder </p>";}
 
-            // DELETE TEMP     
-            // Recursively Delete temporary unzip location
-            rrmdir($temp_unzip_path);
 
-            // redirect page to admin page to commence configuration
-            // ** TO DO ***
+                // ----------
+                // Move Files To Root 
+                // ----------
+                // move unzipped files to the same directory as the script (should be root)
+                // Warning/TEST! it probably won't move hidden files?
 
-            // current test stub instead of admin page opens in new window:
-            // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
-            echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
-            $installed=1;
+                if($debug) { echo "<H2>Moving Files</h2>"; }
+
+                // $startingloc = $temp_unzip_path.'/'.$subfolder;
+                $startingloc = $subfolder;
+
+                //if($debug) { echo "<p>Files being moved from: $startingloc </p>"; }
+
+                $tally2=0;
+
+                $subfolder = realpath($subfolder);
+                //if($debug) { echo "<p>Real Path is : $subfolder </p>"; }
+
+                //if($debug) { echo "<p>Is subfolder directory readable? ".is_readable($subfolder)."</p>";}
+
+                $directory_iterator = new RecursiveDirectoryIterator($subfolder,FilesystemIterator::SKIP_DOTS);
+
+                $fileSPLObjects =  new RecursiveIteratorIterator($directory_iterator, RecursiveIteratorIterator::SELF_FIRST,RecursiveIteratorIterator::CATCH_GET_CHILD);
+
+                try {
+
+                  foreach($fileSPLObjects as $file) {
+                    $tally2 ++;
+                        $filename= $file->getFilename();	
+                        //if($debug) { echo "<p>Current Filename: $filename </p>"; }
+
+                        if (($file->isDir())&&(substr( $filename ,0,1) != ".")) {
+                        // As it's a directory make sure it exists at destination:
+
+                        // Destination:
+                        $newDir = str_replace("/".$startingloc, '', realpath($file));
+                        // if directory doesn't exist then create it
+                        if (!makeDIR($newDir,$debug)) {
+                            if($debug) { echo "<p>Failed to create directory: $newDir</p>"; }
+                        }
+                    } else {
+                        // It's a file so move it
+                        // ** TEST: what if directory hasn't been created yet?? or does Recursive always do the directory first
+                        $currentFile = realpath($file); // current location
+                        if(preg_match('/.gitignore/',$currentFile))
+                        {
+                            $aExplodeCurrentFile = explode('.gitignore', $currentFile);
+                            $currentFile = $aExplodeCurrentFile[0];
+                        }
+                        $newFile = str_replace("/".$startingloc, '', realpath($file)); // Destination
+                        if(preg_match('/.gitignore/',$newFile))
+                        {
+                            $aExplodeNewFile = explode('.gitignore', $newFile);
+                            $newFile = $aExplodeNewFile[0];
+                        }
+                        // if file already exists remove it
+                        if (file_exists($newFile) && !is_dir($newFile)) {
+                            //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
+                            ($bChmod) ? chmod($newFile, 0777) : '';
+                            unlink($newFile);
+                        }
+
+                        // Move via rename
+                        // rename(oldname, newname)
+                        //rename($currentFile, $newFile);
+                        if(!file_exists($newFile))
+                        {
+                            if (rename($currentFile , $newFile)) {
+                                ($bChmod) ? chmod($newFile, 0755) : '';
+                                //if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
+                            } else {
+                                if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
+                                $result = false;
+                            } // END rename 
+                        }
+                    }// END is Dir or File checks
+
+                  } // END foreach
+                } // END Try
+                catch (UnexpectedValueException $e) {
+                    echo "<h2>Error Moving Files!</h2>";
+                    if($debug) {echo "<p>There was a directory we couldn't get into!</p>";}
+                }
+                if ($debug) {echo "<p>Loop Count: $tally2</p>";}
+
+                // --------------------
+                // HANDLE MOVE FAILURE:
+                // IF Tally2 is zero then move failed try alternative method based on scandir
+
+                if ($tally2==0) {
+                    if($debug) { echo "<h2>File Move Failed!</h2><p> - Attempting alternative approach</p>"; }
+
+                    $destination  = dirname(__FILE__);
+
+                    if($debug) { echo "<p>Moving files from<br>  $subfolder <br> to: $destination</p>"; }
+
+                    if (moveDIR($subfolder,$destination,$debug)) {
+                        if($debug) { echo "<h2>Move Succeeded!</h2>"; }
+                    } else {
+                        if($debug) { "<h2>ERROR! Move Failed!</h2><p>Infection Failed</p>"; }
+                    } // End moveDIR check
+
+                } // END try alternative move approach
+
+                // DELETE TEMP     
+                // Recursively Delete temporary unzip location
+                rrmdir($temp_unzip_path);
+
+                // redirect page to admin page to commence configuration
+                // ** TO DO ***
+
+                // current test stub instead of admin page opens in new window:
+                // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
+                echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
+                $installed=1;
             } 
             else 
             {
@@ -1195,6 +1190,10 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <br/><br/>
                         <div>
                             <input type="button" id="show_delete_option" value="Show Options" onclick="toggleDeleteFile('delete_file','show_delete_option');">
+                        </div>
+                        <br/>
+                        <div>
+                            <a href="tv/updategetinfected/"><input type="button" value="Update Get Infected ?"></a>
                         </div>
                         <br/>
                         <div id="delete_file" style="display:none">
