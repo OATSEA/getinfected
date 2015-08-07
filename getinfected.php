@@ -25,7 +25,7 @@
                 .error-message{
                     color: red;
                     text-align: right;
-                    width: 20%;
+                    width: 30%;
                 }
                 .sources{
                     margin-left: 40px;
@@ -160,15 +160,7 @@
                         border-top: 30px solid transparent;
                         height: 0;
                         width: 20px;
-                }
-                .radio_class
-                {
-                   margin: 10px 0px 10px 4px; 
-                }
-                a{
-                    text-decoration: none;
-                }
-                
+                    }
         </style>
          <script type="text/javascript">
             function checkLoaded(loaded){
@@ -185,12 +177,7 @@
         </script>
     </head>
     <body class="main" onload="checkLoaded(false);">
-    <div id="loading">
-        <?php 
-        
-            echo (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) ? "Updating..." : "Installing...";
-        ?>
-    </div>
+    <div id="loading">Loading...</div>
     <script>
         checkLoaded(false);
     </script>
@@ -198,24 +185,22 @@
     $debug = isset($_POST['show_debug']) ? $_POST['show_debug'] : 0;
     $bChmod = isset($_POST['chmod']) ? $_POST['chmod'] : 0;
     $installed=0;
+    
     $_SESSION['isValidation']['flag'] = TRUE;
     if($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_SESSION['isValidation']))
     {
         $bRemovePreviousInstall = isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : 0;
         $bDownloadLatestVersion = isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : 0;
-        $sBranchName = isset($_POST['branch_name']) ? $_POST['branch_name'] : '';
-        $sDeviceAddress = isset($_POST['device_address']) ? ($_POST['device_address']):'';
-        $sFileName = isset($_FILES['upload_file']['name']) ? ($_FILES['upload_file']['name']):'';
-        $sTempFileName = isset($_FILES['upload_file']['tmp_name'])? ($_FILES['upload_file']['tmp_name']):'';
-        $nPort = isset($_POST['port_number']) ? $_POST['port_number']:'';
+        $sBranchName = $_POST['branch_name'];
+        $sDeviceAddress = $_POST['device_address'];
+        $nPort = $_POST['port_number'];
         $bInfectFiles = isset($_POST["infect_files"]) ? $_POST["infect_files"] : 0;
         $bDeleteData = isset($_POST["delete_data"]) ? $_POST["delete_data"] : 0;
         $bDeletePayload = isset($_POST['delete_payload']) ? $_POST['delete_payload'] : 0;
         $bDeleteAdminPayload = isset($_POST['admin_payload']) ? $_POST['admin_payload'] : 0;
         $bDeleteContent = isset($_POST['delete_content']) ? $_POST['delete_content'] : 0;
-        $sInfectionResource = isset($_POST['infection_resource']) ? $_POST['infection_resource'] : '';
         
-        if($sInfectionResource == 'branch_value')
+        if($_POST['infection_resource'] == 'branch_value')
         {
             if(empty($sBranchName))
             {
@@ -223,19 +208,11 @@
                 $_SESSION['isValidation']['flag'] = FALSE;
             }
         }
-        if($sInfectionResource == 'infected_device')
+        if($_POST['infection_resource'] == 'infected_device')
         {
             if(empty($sDeviceAddress))
             {
                 $_SESSION['isValidation']['device_address'] = 'Please enter device address!!';
-                $_SESSION['isValidation']['flag'] = FALSE;
-            }
-        }
-        if($sInfectionResource == 'file_browse')
-        {
-            if(empty($sFileName))
-            {
-                $_SESSION['isValidation']['upload_file'] = 'Please Choose File!!';
                 $_SESSION['isValidation']['flag'] = FALSE;
             }
         }
@@ -263,6 +240,23 @@
             }
         if($_SESSION['isValidation']['flag'] == 1)
         {
+//            if($bRemovePreviousInstall)
+//            {
+//                rrmdir('admin');
+//                rrmdir('content');
+//                rrmdir('css');
+//                rrmdir('data');
+//                rrmdir('images');
+//                rrmdir('infect');
+//                rrmdir('js');
+//                rrmdir('payloads');
+//                rrmdir('play');
+//                (file_exists('index.html')) ? unlink('index.html') : '';
+//                (file_exists('README.md')) ? unlink('README.md') : '';
+//                (file_exists('testingpayloads.html')) ? unlink('testingpayloads.html') : '';
+//            }
+//            else
+//            {
             if($bDownloadLatestVersion)
             {
                 if($bInfectFiles)
@@ -361,8 +355,8 @@
             //---------
             // Move Directory
 
-            function moveDIR($dir,$dest="",$debug) {
-                //$debug = 1;
+            function moveDIR($dir,$dest="") {
+                $debug = 1;
                 $result=true;
 
                 if($debug) { echo "<h2>Moving directory</h2><p> From:<br> $dir <br>To: $dest</p>";}
@@ -378,7 +372,7 @@
 
                             $newDir = $dest."/".$file;
 
-                            if (!moveDIR($pathFile,$newDir,$debug)) {
+                            if (!moveDIR($pathFile,$newDir)) {
                                 $result = false;
                             }
 
@@ -476,17 +470,13 @@
             if (!makeDIR($infect,$debug)) { 
                     // failed to make directory so exit
                     exit("<h3>Infection Failed!</h3>");
-                    
             }
-            if($sInfectionResource == 'file_browse')
-            {
-                move_uploaded_file($sTempFileName, $_SERVER['DOCUMENT_ROOT'].'/'.$infect.'/'.$sFileName);
-            }
+
             // Github repository details for Teacher Virus core  
             $username="OATSEA";
             $repo="teachervirus";
-             
-            $download_filename = (empty($sFileName)) ? $username."-".$repo.".zip" : $sFileName;
+
+            $download_filename = $username."-".$repo.".zip";
             $infectdir = $infect.'/'; // infect directory with trailing slash for URL use
 
             $zipfile = $infectdir.$download_filename;
@@ -495,8 +485,16 @@
             // ** TO DO **
             
             // Download file if OATSEA-teachervirus.zip doesn't already exist
-            if (file_exists($zipfile) && $bDownloadLatestVersion == 0) 
-            {
+            if (file_exists($zipfile) && $bDownloadLatestVersion == 0) {
+                //$installed = 1;
+//                if ($debug) { 
+//                    echo "<p>The Teacher Virus files have already been downloaded to: $zipfile</p>
+//                    <p>This infection will use the existing file rather than downloading a new version of Teacher Virus.</p>
+//                    <p><b>Hint:</b> If you want to download a new version of Teacher Virus you will need to:</br>
+//                    * delete the file: <b>$zipfile</b>.</br>
+//                    * remove the <b>play</b> folder if it exists</br>
+//                    * refresh/re-open <b>getinfected.php</b></p>"; 
+//                } // END Debug
                 $geturl = $protocol.'/'.$zipfile;
                 
                 // TRY DOWNLOAD via copy
@@ -509,187 +507,187 @@
                 $copyflag = TRUE;
                 
                
-                // ---------------------
-                // UNZIP downloaded file
-                // ---------------------
+            // ---------------------
+            // UNZIP downloaded file
+            // ---------------------
 
-                // Code Attribution: 
-                // http://stackoverflow.com/questions/8889025/unzip-a-file-with-php
+            // Code Attribution: 
+            // http://stackoverflow.com/questions/8889025/unzip-a-file-with-php
 
-                if ($debug) {echo "<h2>Attempting to Unzip</h2><p>Zipped file:  $zipfile </p>";}
+            if ($debug) {echo "<h2>Attempting to Unzip</h2><p>Zipped file:  $zipfile </p>";}
 
-                // get the absolute path to $file - not used as using location of script instead
-                // $path = pathinfo(realpath($zipfile), PATHINFO_DIRNAME);
+            // get the absolute path to $file - not used as using location of script instead
+            // $path = pathinfo(realpath($zipfile), PATHINFO_DIRNAME);
 
-                // Create full temp sub_folder path
-                $temp_unzip_path = uniqid('unzip_temp_', true)."/";
+            // Create full temp sub_folder path
+            $temp_unzip_path = uniqid('unzip_temp_', true)."/";
 
-                if($debug) { echo "Temp Unzip Path is: ".$temp_unzip_path."<br>"; }
+            if($debug) { echo "Temp Unzip Path is: ".$temp_unzip_path."<br>"; }
 
-                // Make the new temp sub_folder for unzipped files
-                if (!mkdir($temp_unzip_path, 0755, true)) {
-                    exit("<h2>Error - Infection Failed!</h2><p> Could not create unzip folder: $temp_unzip_path</p><p>File security or permissions issue?");
-                } else { 
-                    if($debug) { echo "<p>Temp unzip Folder Created! <br>"; }
-                }
+            // Make the new temp sub_folder for unzipped files
+            if (!mkdir($temp_unzip_path, 0755, true)) {
+                exit("<h2>Error - Infection Failed!</h2><p> Could not create unzip folder: $temp_unzip_path</p><p>File security or permissions issue?");
+            } else { 
+                if($debug) { echo "<p>Temp unzip Folder Created! <br>"; }
+            }
 
-                umask(0);
-                $zip = new ZipArchive;
-                $zipFlag = $zip->open($zipfile);
-                if ($zipFlag == TRUE) {
-                    // extract it to the path we determined above
-                  $zip->extractTo($temp_unzip_path);
-                  // $zip->extractTo($path);
-                  $zip->close();
-                    if($debug) { echo "<h3>Unzip Successful!</h3><p> $zipfile extracted to $temp_unzip_path </p>"; }
+            umask(0);
+            $zip = new ZipArchive;
+            $zipFlag = $zip->open($zipfile);
+            if ($zipFlag == TRUE) {
+                // extract it to the path we determined above
+              $zip->extractTo($temp_unzip_path);
+              // $zip->extractTo($path);
+              $zip->close();
+                if($debug) { echo "<h3>Unzip Successful!</h3><p> $zipfile extracted to $temp_unzip_path </p>"; }
+            } else {
+                exit("<h2>Infection Failed!</h2><p> couldn't open $zipfile </p>");
+            }
+            
+
+            // -------------------------    
+            // Determine Subfolder Name
+            // ------------------------- 
+
+            // GitHub puts all files in an enclosing folder that has a changing suffix every time.
+            // It does this to indicate commits.
+            // As a result we can't assume the name of the folder.
+            // and need to determine the name of the subfolder
+
+            if($debug) { echo "<h2>Determine subfolder</h2><p>Starting from folder: $temp_unzip_path </p>"; }
+            $subfolder='notset';
+
+            $files = scandir($temp_unzip_path);
+
+            $tally=0;
+            foreach($files as $file) {
+                $tally++;
+                // if($debug) {echo "Filename: $file";}
+                if (substr( $file ,0,1) != ".") {
+                    $subfolder=$temp_unzip_path.$file; 
+                } // END if not .
+
+            } // END foreach
+
+            // if($debug) { echo "<p><b>Tally:</b> $tally </p>";}
+            if($debug) { echo "<p>Subfolder is : $subfolder </p>";}
+
+
+            // ----------
+            // Move Files To Root 
+            // ----------
+            // move unzipped files to the same directory as the script (should be root)
+            // Warning/TEST! it probably won't move hidden files?
+
+            if($debug) { echo "<H2>Moving Files</h2>"; }
+
+            // $startingloc = $temp_unzip_path.'/'.$subfolder;
+            $startingloc = $subfolder;
+
+            //if($debug) { echo "<p>Files being moved from: $startingloc </p>"; }
+
+            $tally2=0;
+
+            $subfolder = realpath($subfolder);
+            //if($debug) { echo "<p>Real Path is : $subfolder </p>"; }
+
+            //if($debug) { echo "<p>Is subfolder directory readable? ".is_readable($subfolder)."</p>";}
+
+            $directory_iterator = new RecursiveDirectoryIterator($subfolder,FilesystemIterator::SKIP_DOTS);
+
+            $fileSPLObjects =  new RecursiveIteratorIterator($directory_iterator, RecursiveIteratorIterator::SELF_FIRST,RecursiveIteratorIterator::CATCH_GET_CHILD);
+
+            try {
+
+              foreach($fileSPLObjects as $file) {
+                $tally2 ++;
+                    $filename= $file->getFilename();	
+                    //if($debug) { echo "<p>Current Filename: $filename </p>"; }
+
+                    if (($file->isDir())&&(substr( $filename ,0,1) != ".")) {
+                    // As it's a directory make sure it exists at destination:
+
+                    // Destination:
+                    $newDir = str_replace("/".$startingloc, '', realpath($file));
+                    // if directory doesn't exist then create it
+                    if (!makeDIR($newDir,$debug)) {
+                        if($debug) { echo "<p>Failed to create directory: $newDir</p>"; }
+                    }
                 } else {
-                    exit("<h2>Infection Failed!</h2><p> couldn't open $zipfile </p>");
-                }
+                    // It's a file so move it
+                    // ** TEST: what if directory hasn't been created yet?? or does Recursive always do the directory first
+                    $currentFile = realpath($file); // current location
+                    if(preg_match('/.gitignore/',$currentFile))
+                    {
+                        $aExplodeCurrentFile = explode('.gitignore', $currentFile);
+                        $currentFile = $aExplodeCurrentFile[0];
+                    }
+                    $newFile = str_replace("/".$startingloc, '', realpath($file)); // Destination
+                    if(preg_match('/.gitignore/',$newFile))
+                    {
+                        $aExplodeNewFile = explode('.gitignore', $newFile);
+                        $newFile = $aExplodeNewFile[0];
+                    }
+                    // if file already exists remove it
+                    if (file_exists($newFile) && !is_dir($newFile)) {
+                        //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
+                        ($bChmod) ? chmod($newFile, 0777) : '';
+                        unlink($newFile);
+                    }
 
+                    // Move via rename
+                    // rename(oldname, newname)
+                    //rename($currentFile, $newFile);
+                    if(!file_exists($newFile))
+                    {
+                        if (rename($currentFile , $newFile)) {
+                            ($bChmod) ? chmod($newFile, 0755) : '';
+                            //if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
+                        } else {
+                            if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
+                            $result = false;
+                        } // END rename 
+                    }
+                }// END is Dir or File checks
 
-                // -------------------------    
-                // Determine Subfolder Name
-                // ------------------------- 
+              } // END foreach
+            } // END Try
+            catch (UnexpectedValueException $e) {
+                echo "<h2>Error Moving Files!</h2>";
+                if($debug) {echo "<p>There was a directory we couldn't get into!</p>";}
+            }
+            if ($debug) {echo "<p>Loop Count: $tally2</p>";}
 
-                // GitHub puts all files in an enclosing folder that has a changing suffix every time.
-                // It does this to indicate commits.
-                // As a result we can't assume the name of the folder.
-                // and need to determine the name of the subfolder
+            // --------------------
+            // HANDLE MOVE FAILURE:
+            // IF Tally2 is zero then move failed try alternative method based on scandir
 
-                if($debug) { echo "<h2>Determine subfolder</h2><p>Starting from folder: $temp_unzip_path </p>"; }
-                $subfolder='notset';
+            if ($tally2==0) {
+                if($debug) { echo "<h2>File Move Failed!</h2><p> - Attempting alternative approach</p>"; }
 
-                $files = scandir($temp_unzip_path);
+                $destination  = dirname(__FILE__);
 
-                $tally=0;
-                foreach($files as $file) {
-                    $tally++;
-                    // if($debug) {echo "Filename: $file";}
-                    if (substr( $file ,0,1) != ".") {
-                        $subfolder=$temp_unzip_path.$file; 
-                    } // END if not .
+                if($debug) { echo "<p>Moving files from<br>  $subfolder <br> to: $destination</p>"; }
 
-                } // END foreach
+                if (moveDIR($subfolder,$destination)) {
+                    if($debug) { echo "<h2>Move Succeeded!</h2>"; }
+                } else {
+                    if($debug) { "<h2>ERROR! Move Failed!</h2><p>Infection Failed</p>"; }
+                } // End moveDIR check
 
-                // if($debug) { echo "<p><b>Tally:</b> $tally </p>";}
-                if($debug) { echo "<p>Subfolder is : $subfolder </p>";}
+            } // END try alternative move approach
 
+            // DELETE TEMP     
+            // Recursively Delete temporary unzip location
+            rrmdir($temp_unzip_path);
 
-                // ----------
-                // Move Files To Root 
-                // ----------
-                // move unzipped files to the same directory as the script (should be root)
-                // Warning/TEST! it probably won't move hidden files?
+            // redirect page to admin page to commence configuration
+            // ** TO DO ***
 
-                if($debug) { echo "<H2>Moving Files</h2>"; }
-
-                // $startingloc = $temp_unzip_path.'/'.$subfolder;
-                $startingloc = $subfolder;
-
-                //if($debug) { echo "<p>Files being moved from: $startingloc </p>"; }
-
-                $tally2=0;
-
-                $subfolder = realpath($subfolder);
-                //if($debug) { echo "<p>Real Path is : $subfolder </p>"; }
-
-                //if($debug) { echo "<p>Is subfolder directory readable? ".is_readable($subfolder)."</p>";}
-
-                $directory_iterator = new RecursiveDirectoryIterator($subfolder,FilesystemIterator::SKIP_DOTS);
-
-                $fileSPLObjects =  new RecursiveIteratorIterator($directory_iterator, RecursiveIteratorIterator::SELF_FIRST,RecursiveIteratorIterator::CATCH_GET_CHILD);
-
-                try {
-
-                  foreach($fileSPLObjects as $file) {
-                    $tally2 ++;
-                        $filename= $file->getFilename();	
-                        //if($debug) { echo "<p>Current Filename: $filename </p>"; }
-
-                        if (($file->isDir())&&(substr( $filename ,0,1) != ".")) {
-                        // As it's a directory make sure it exists at destination:
-
-                        // Destination:
-                        $newDir = str_replace("/".$startingloc, '', realpath($file));
-                        // if directory doesn't exist then create it
-                        if (!makeDIR($newDir,$debug)) {
-                            if($debug) { echo "<p>Failed to create directory: $newDir</p>"; }
-                        }
-                    } else {
-                        // It's a file so move it
-                        // ** TEST: what if directory hasn't been created yet?? or does Recursive always do the directory first
-                        $currentFile = realpath($file); // current location
-                        if(preg_match('/.gitignore/',$currentFile))
-                        {
-                            $aExplodeCurrentFile = explode('.gitignore', $currentFile);
-                            $currentFile = $aExplodeCurrentFile[0];
-                        }
-                        $newFile = str_replace("/".$startingloc, '', realpath($file)); // Destination
-                        if(preg_match('/.gitignore/',$newFile))
-                        {
-                            $aExplodeNewFile = explode('.gitignore', $newFile);
-                            $newFile = $aExplodeNewFile[0];
-                        }
-                        // if file already exists remove it
-                        if (file_exists($newFile) && !is_dir($newFile)) {
-                            //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
-                            ($bChmod) ? chmod($newFile, 0777) : '';
-                            unlink($newFile);
-                        }
-
-                        // Move via rename
-                        // rename(oldname, newname)
-                        //rename($currentFile, $newFile);
-                        if(!file_exists($newFile))
-                        {
-                            if (rename($currentFile , $newFile)) {
-                                ($bChmod) ? chmod($newFile, 0755) : '';
-                                //if($debug) { echo "<p>Moved $currentFile to $newFile</p>"; }
-                            } else {
-                                if($debug) { echo "<p>Failed to move $currentFile to $newFile</p>"; }
-                                $result = false;
-                            } // END rename 
-                        }
-                    }// END is Dir or File checks
-
-                  } // END foreach
-                } // END Try
-                catch (UnexpectedValueException $e) {
-                    echo "<h2>Error Moving Files!</h2>";
-                    if($debug) {echo "<p>There was a directory we couldn't get into!</p>";}
-                }
-                if ($debug) {echo "<p>Loop Count: $tally2</p>";}
-
-                // --------------------
-                // HANDLE MOVE FAILURE:
-                // IF Tally2 is zero then move failed try alternative method based on scandir
-
-                if ($tally2==0) {
-                    if($debug) { echo "<h2>File Move Failed!</h2><p> - Attempting alternative approach</p>"; }
-
-                    $destination  = dirname(__FILE__);
-
-                    if($debug) { echo "<p>Moving files from<br>  $subfolder <br> to: $destination</p>"; }
-
-                    if (moveDIR($subfolder,$destination,$debug)) {
-                        if($debug) { echo "<h2>Move Succeeded!</h2>"; }
-                    } else {
-                        if($debug) { "<h2>ERROR! Move Failed!</h2><p>Infection Failed</p>"; }
-                    } // End moveDIR check
-
-                } // END try alternative move approach
-
-                // DELETE TEMP     
-                // Recursively Delete temporary unzip location
-                rrmdir($temp_unzip_path);
-
-                // redirect page to admin page to commence configuration
-                // ** TO DO ***
-
-                // current test stub instead of admin page opens in new window:
-                // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
-                echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
-                $installed=1;
+            // current test stub instead of admin page opens in new window:
+            // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
+            echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
+            $installed=1;
             } 
             else 
             {
@@ -790,23 +788,7 @@
                         // As download failed delete empty zip file!
                         if ($debug) { echo "<h2>Download with CURL failed</h2>";}
                         echo "<h3>Infection Failed!</h3><p>Couldn't download with either copy or curl</p>";
-                        if (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) 
-                        {
-                            echo '<link href="'.$protocol.'/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-                                    <div class="color-white">
-                                        <a class="play_img" href="'.$protocol.'/getinfected.php">
-                                            <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
-                                        </a>
-                                    </div><br/><br/>';
-                        }
-                        else
-                        {
-                            echo '<div class="color-white">
-                                        <a class="play_img" href="'.$protocol.'/getinfected.php">Back..</a>
-                                    </div><br/><br/>';
-                        }
-                        
-                        unlink($_SERVER['DOCUMENT_ROOT'].'/'.$zipfile);
+                        unlink($zipfile);
                         //promptForIP();
                     } // If Download failed using CURL 
                 }// END else CURL
@@ -975,7 +957,7 @@
 
                 if($debug) { echo "<p>Moving files from<br>  $subfolder <br> to: $destination</p>"; }
 
-                if (moveDIR($subfolder,$destination,$debug)) {
+                if (moveDIR($subfolder,$destination)) {
                     if($debug) { echo "<h2>Move Succeeded!</h2>"; }
                 } else {
                     if($debug) { "<h2>ERROR! Move Failed!</h2><p>Infection Failed</p>"; }
@@ -1011,7 +993,7 @@
         }
     }
 if($_SESSION['isValidation']['flag'] == 1) 
-        unset($_SESSION['isValidation']['user_name_required'],$_SESSION['isValidation']['repository_required'],$_SESSION['isValidation']['branch_name'],$_SESSION['isValidation']['device_address'],$_SESSION['isValidation']['upload_file']);
+        unset($_SESSION['isValidation']['user_name_required'],$_SESSION['isValidation']['repository_required']);
 
     if($_SESSION['isValidation']['flag'] == 1 || count($_SESSION['isValidation']) > 1)
     {
@@ -1032,19 +1014,11 @@ if($_SESSION['isValidation']['flag'] == 1)
                 {
                   document.getElementById("infected_device").style.display = "block";
                   document.getElementById("branch_value").style.display = "none";
-                  document.getElementById("file_browse").style.display = "none";
                 }
                 else if(divId == "branch_value")
                 {
                     document.getElementById("infected_device").style.display = "none";
                     document.getElementById("branch_value").style.display = "block";
-                    document.getElementById("file_browse").style.display = "none";
-                }
-                else if(divId == "file_browse")
-                {
-                  document.getElementById("file_browse").style.display = "block";
-                  document.getElementById("branch_value").style.display = "none";
-                  document.getElementById("infected_device").style.display = "none";
                 }
             }
             function changeValue(boxId)
@@ -1169,7 +1143,7 @@ if($_SESSION['isValidation']['flag'] == 1)
     <?php 
         } 
     ?>  
-        <form method="post" action="" id="getinfected_form" enctype="multipart/form-data">
+        <form method="post" action="" id="getinfected_form">
             <div id="container">
                 <div class="payload-details">
                 <?php 
@@ -1180,20 +1154,20 @@ if($_SESSION['isValidation']['flag'] == 1)
                     <input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggleVisibility('main','show_settings');">
                 </div><br/>
                 <div id="main" style="display:none">
+                    <div>
+                        <input type="button" value="Update Get Infected ?" onclick="location.href='tv/updategetinfected/';">
+                    </div><br/>
                     <?php 
                         if (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) 
                         {
                     ?>
                         <div class="text-field">
-                            <b><input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('remove_previous_install');">  Remove Current Installation?</b>
+                            <b>Remove Current Installation?</b>
+                            <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('remove_previous_install');">
                         </div>
                         <br/><br/>
                         <div>
                             <input type="button" id="show_delete_option" value="Show Options" onclick="toggleDeleteFile('delete_file','show_delete_option');">
-                        </div>
-                        <br/>
-                        <div>
-                            <a href="tv/updategetinfected/"><input type="button" value="Update Get Infected ?"></a>
                         </div>
                         <br/>
                         <div id="delete_file" style="display:none">
@@ -1208,26 +1182,27 @@ if($_SESSION['isValidation']['flag'] == 1)
                         </div>
                         <br/>
                         <div class="text-field">
-                            <b><input type="checkbox" name="download_latest_version" id="download_latest_version" value="<?php echo isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['download_latest_version']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('download_latest_version');">  Download Latest Version?</b>
+                            <b>Download Latest Version?</b>
+                            <input type="checkbox" name="download_latest_version" id="download_latest_version" value="<?php echo isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['download_latest_version']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('download_latest_version');">
                         </div>
                         <br/>
                     <?php
                         }
                     ?>
-                    <div id="infection_sources">
+                        <div id="infection_sources">
                         <div style="font-weight:bold;">Infection Source:</div><br/>
-                        <input type="radio" class="radio_class" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');"> GitHub
+                        <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
                         <div id="branch_value" style="display:none;" class="sources">
-                            <br/>
+                            <br/><br/>
                             <div class="text-field">Branch?<font color="red">*</font></div>
                             <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : 'master'; ?>" name="branch_name" id="branch_name">
                             <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
                             <div class="error-message">
                                 <?php echo isset($_SESSION['isValidation']['branch_name']) ? $_SESSION['isValidation']['branch_name'] : '';?>
                             </div>
-                        </div><br/>
-                        <input type="radio" class="radio_class" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');"> Infected Device
-                    </div>
+                        </div><br/><br/>
+                        <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
+                    </div><br/><br/>
                     
                     <div id="infected_device" style="display:none;" class="sources">
                         <div class="text-field">Infected Device Address <font color="red">*</font></div>
@@ -1241,31 +1216,23 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <input type="text" name="port_number" id="port_number" value="8080">
                         <input type="button" value="Clear" onclick="removePort('port_number');"/>
                         <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
-                    </div>
+                    </div><br/><br/>
                     <div>
-                        <input type="radio" class="radio_class"  name="infection_resource" value="file_browse" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "file_browse" ) ? "checked='checked'" : ""; ?> onclick="showData('file_browse');"> File Upload
-                    </div>
-                    <div id="file_browse" style="display:none;" class="sources">
-                        <div class="radio_class">
-                            <input type="file" name="upload_file" value="Browse">
-                        </div>
-                        <div class="error-message">
-                            <?php echo isset($_SESSION['isValidation']['upload_file']) ? $_SESSION['isValidation']['upload_file'] : '';?>
-                        </div>
-                    </div>
-                    <div>
-                        <b><input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : '0'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">  Show debug text</b>
+                        <b>Show debug text</b>
+                        <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : '0'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
                     </div>
                     <br/>
                     <div>
-                        <b><input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : '0'; ?>" <?php echo isset($_POST['chmod']) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">  Chmod?</b>
+                        <b>Chmod?</b>
+                        <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : '0'; ?>" <?php echo isset($_POST['chmod']) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
                     </div>
                      <br/>
                     <div class="mandatory"><font color="red">*</font> indicates mandatory field</div>
                 </div>
-                    <div class="go-button">
-                        <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
-                    </div><br/>    
+                
+                <div class="go-button">
+                    <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
+                </div><br/>    
             </div>
             <input type="hidden" name="setting_value" id="setting_value">
         </form>
