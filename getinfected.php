@@ -1,8 +1,19 @@
 <?php 
     if(session_status()!=PHP_SESSION_ACTIVE) session_start();
     error_reporting(E_ALL ^ E_WARNING);
-    $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-    $protocol .= "://" . $_SERVER['HTTP_HOST'];
+    $sFolderPath = $_SERVER['DOCUMENT_ROOT'];
+    $sDestination = $sFolderPath.'/data/bootstrap.php';
+    
+    if(file_exists($sDestination))
+    {
+        require_once $sDestination;
+        $protocol = SITE_URL;
+    }
+    else
+    {
+        $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        $protocol .= "://" . $_SERVER['HTTP_HOST'];
+    }
 ?>
 <html>
     <head>
