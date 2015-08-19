@@ -6,13 +6,15 @@
     
     if(file_exists($sDestination))
     {
-        require_once $sDestination;
+        require_once($sDestination);
         $protocol = SITE_URL;
+        $sDocumentRoot = ROOT_DIR;
     }
     else
     {
         $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
         $protocol .= "://" . $_SERVER['HTTP_HOST'];
+        $sDocumentRoot = $_SERVER['DOCUMENT_ROOT'];
     }
 ?>
 <html>
@@ -41,16 +43,6 @@
                 .sources{
                     margin-left: 40px;
                 }
-                /*.text-field{
-                    float: left;
-                    padding-right: 10px;
-                    text-align: right;
-                }
-                .example-text{
-                    padding-left: 20px;
-                    text-align: center;
-                    width: 100%;
-                }*/
                 .go-button{
                     color: #000;
                     float: right;
@@ -173,7 +165,7 @@
                         width: 20px;
                     }
         </style>
-         <script type="text/javascript">
+        <script type="text/javascript">
             function checkLoaded(loaded){
                 if(loaded == true)
                 {
@@ -251,23 +243,6 @@
             }
         if($_SESSION['isValidation']['flag'] == 1)
         {
-//            if($bRemovePreviousInstall)
-//            {
-//                rrmdir('admin');
-//                rrmdir('content');
-//                rrmdir('css');
-//                rrmdir('data');
-//                rrmdir('images');
-//                rrmdir('infect');
-//                rrmdir('js');
-//                rrmdir('payloads');
-//                rrmdir('play');
-//                (file_exists('index.html')) ? unlink('index.html') : '';
-//                (file_exists('README.md')) ? unlink('README.md') : '';
-//                (file_exists('testingpayloads.html')) ? unlink('testingpayloads.html') : '';
-//            }
-//            else
-//            {
             if($bDownloadLatestVersion)
             {
                 if($bInfectFiles)
@@ -687,8 +662,7 @@
                 echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 if(file_exists($protocol.'/data/bootstrap.php'))
                 {
-                    $sFolderPath = $_SERVER['DOCUMENT_ROOT'];
-                    $sDestination = $sFolderPath.'/data/bootstrap.php';
+                    $sDestination = $sDocumentRoot.'/data/bootstrap.php';
                     require_once $sDestination;
                 }
                 $installed=1;
@@ -978,8 +952,7 @@
                 echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 if(file_exists($protocol.'/data/bootstrap.php'))
                 {
-                    $sFolderPath = $_SERVER['DOCUMENT_ROOT'];
-                    $sDestination = $sFolderPath.'/data/bootstrap.php';
+                    $sDestination = $sDocumentRoot.'/data/bootstrap.php';
                     require_once $sDestination;
                 }
                 $installed=1;
@@ -1005,13 +978,12 @@ if($_SESSION['isValidation']['flag'] == 1)
     if($_SESSION['isValidation']['flag'] == 1 || count($_SESSION['isValidation']) > 1)
     {
         $_SESSION['isLoggedIn'] = isset($_SESSION['isLoggedIn']) ? $_SESSION['isLoggedIn'] : FALSE;
-        if((is_dir($_SERVER['DOCUMENT_ROOT']."/admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
+        if((is_dir($sDocumentRoot."/admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
-            $sFolderPath = $_SERVER['DOCUMENT_ROOT'];
-            $sDestination = $sFolderPath.'/data/bootstrap.php';
+            $sDestination = $sDocumentRoot.'/data/bootstrap.php';
             if(file_exists($sDestination))
             {
-                require_once $sDestination;
+                require_once($sDestination);
                 $protocol = SITE_URL;
             }
             else
