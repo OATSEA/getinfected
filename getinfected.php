@@ -660,10 +660,9 @@
                 // current test stub instead of admin page opens in new window:
                 // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
                 echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
-                if(file_exists($protocol.'/data/bootstrap.php'))
+                if(file_exists($sDestination))
                 {
-                    $sDestination = getcwd().'/data/bootstrap.php';
-                    require_once $sDestination;
+                    require_once($sDestination);
                 }
                 $installed=1;
             }
@@ -950,10 +949,9 @@
                 // current test stub instead of admin page opens in new window:
                 // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
                 echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
-                if(file_exists($protocol.'/data/bootstrap.php'))
+                if(file_exists($sDestination))
                 {
-                    $sDestination = getcwd().'/data/bootstrap.php';
-                    require_once $sDestination;
+                    require_once($sDestination);
                 }
                 $installed=1;
             } // END Download if zipfile doesn't already exists
@@ -980,8 +978,7 @@ if($_SESSION['isValidation']['flag'] == 1)
         $_SESSION['isLoggedIn'] = isset($_SESSION['isLoggedIn']) ? $_SESSION['isLoggedIn'] : FALSE;
         if((is_dir("admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
-            $sDestination = $protocol.'/data/bootstrap.php';
-            if(file_exists($sDestination))
+            if($sDestination)
             {
                 require_once($sDestination);
                 $protocol = SITE_URL;
