@@ -2,19 +2,19 @@
     if(session_status()!=PHP_SESSION_ACTIVE) session_start();
     error_reporting(E_ALL ^ E_WARNING);
     $sFolderPath = $_SERVER['DOCUMENT_ROOT'];
-    $sDestination = $sFolderPath.'/data/bootstrap.php';
+    $sDestination = getcwd().'/data/bootstrap.php';
     
     if(file_exists($sDestination))
     {
         require_once($sDestination);
         $protocol = SITE_URL;
-        $sDocumentRoot = ROOT_DIR;
     }
     else
     {
-        $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-        $protocol .= "://" . $_SERVER['HTTP_HOST'];
-        $sDocumentRoot = $_SERVER['DOCUMENT_ROOT'];
+        $sSiteUrl = (isset($_SERVER["HTTP_HOST"]) ? "http://".$_SERVER["HTTP_HOST"] : '');
+        $sRequestUrl = $sSiteUrl.$_SERVER['REQUEST_URI'];
+        //$protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        $protocol = $sRequestUrl;//"://" . $_SERVER['HTTP_HOST'];
     }
 ?>
 <html>
@@ -180,7 +180,7 @@
         </script>
     </head>
     <body class="main" onload="checkLoaded(false);">
-    <div id="loading">Loading...</div>
+    <div id="loading"><?php echo is_dir("/admin") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?></div>
     <script>
         checkLoaded(false);
     </script>
@@ -662,7 +662,7 @@
                 echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 if(file_exists($protocol.'/data/bootstrap.php'))
                 {
-                    $sDestination = $sDocumentRoot.'/data/bootstrap.php';
+                    $sDestination = getcwd().'/data/bootstrap.php';
                     require_once $sDestination;
                 }
                 $installed=1;
@@ -952,7 +952,7 @@
                 echo '<h2>Infection Complete!</h2><h2><a href="admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 if(file_exists($protocol.'/data/bootstrap.php'))
                 {
-                    $sDestination = $sDocumentRoot.'/data/bootstrap.php';
+                    $sDestination = getcwd().'/data/bootstrap.php';
                     require_once $sDestination;
                 }
                 $installed=1;
@@ -978,9 +978,9 @@ if($_SESSION['isValidation']['flag'] == 1)
     if($_SESSION['isValidation']['flag'] == 1 || count($_SESSION['isValidation']) > 1)
     {
         $_SESSION['isLoggedIn'] = isset($_SESSION['isLoggedIn']) ? $_SESSION['isLoggedIn'] : FALSE;
-        if((is_dir($sDocumentRoot."/admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
+        if((is_dir("admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
-            $sDestination = $sDocumentRoot.'/data/bootstrap.php';
+            $sDestination = $protocol.'/data/bootstrap.php';
             if(file_exists($sDestination))
             {
                 require_once($sDestination);
@@ -988,8 +988,10 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
             else
             {
-                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-                $protocol .= "://" . $_SERVER['HTTP_HOST'];
+                $sSiteUrl = (isset($_SERVER["HTTP_HOST"]) ? "http://".$_SERVER["HTTP_HOST"] : '');
+                $sRequestUrl = $sSiteUrl.$_SERVER['REQUEST_URI'];
+                //$protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+                $protocol = $sRequestUrl;//"://" . $_SERVER['HTTP_HOST'];
             }
             redirect($protocol.'/admin');
         }
@@ -1136,7 +1138,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             <div id="container">
                 <div class="payload-details">
                 <?php 
-                    echo is_dir($_SERVER['DOCUMENT_ROOT']."/admin") ? "<h2>Update Teacher Virus</h2>" : "<h2>Ready to Get Infected?</h2>";
+                    echo is_dir("/admin") ? "<h2>Update Teacher Virus</h2>" : "<h2>Ready to Get Infected?</h2>";
                 ?>
                 </div>
                 <div>
