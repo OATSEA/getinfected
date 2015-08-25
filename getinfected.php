@@ -662,7 +662,7 @@
                 {
                     require_once($sDestination);
                 }
-                echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'/admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
+                echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                $installed=1;
             }
             else 
