@@ -951,7 +951,7 @@
                 {
                     require_once($sDestination);
                 }
-                echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'/admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
+                echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 $installed=1;
             } // END Download if zipfile doesn't already exists
         }
@@ -1123,7 +1123,7 @@ if($_SESSION['isValidation']['flag'] == 1)
     ?>
             <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
             <div class="color-white">
-                <a class="play_img" href="<?php echo $protocol.'/admin'; ?>">
+                <a class="play_img" href="<?php echo $protocol.'admin'; ?>">
                     <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
                 </a>
             </div><br/><br/>
