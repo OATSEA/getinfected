@@ -179,7 +179,7 @@
         </script>
     </head>
     <body class="main" onload="checkLoaded(false);">
-    <div id="loading"><?php echo is_dir("/admin") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?></div>
+    <div id="loading"><?php echo is_dir(ROOT_DIR."/admin") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?></div>
     <script>
         checkLoaded(false);
     </script>
@@ -1084,7 +1084,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             {
                 showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : 'branch_value'; ?>");
                 showMain("<?php echo isset($_POST['setting_value']) ? $_POST['setting_value'] : ''?>");
-                disableDelete("<?php echo is_dir($_SERVER['DOCUMENT_ROOT']."/admin") ? 1 : 0; ?>")
+                disableDelete("<?php echo is_dir(ROOT_DIR."/admin") ? 1 : 0; ?>")
             }
             function toggleVisibility(id,inputid) 
             {
@@ -1118,7 +1118,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
         </script>
     <?php 
-        if (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) 
+        if (is_dir(ROOT_DIR."/admin")) 
         {
     ?>
             <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -1134,7 +1134,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             <div id="container">
                 <div class="payload-details">
                 <?php 
-                    echo is_dir("/admin") ? "<h2>Update Teacher Virus</h2>" : "<h2>Ready to Get Infected?</h2>";
+                    echo is_dir(ROOT_DIR."/admin") ? "<h2>Update Teacher Virus</h2>" : "<h2>Ready to Get Infected?</h2>";
                 ?>
                 </div>
                 <div>
@@ -1145,7 +1145,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <input type="button" value="Update Get Infected ?" onclick="location.href='tv/updategetinfected/';">
                     </div><br/>
                     <?php 
-                        if (is_dir($_SERVER['DOCUMENT_ROOT']."/admin")) 
+                        if (is_dir(ROOT_DIR."/admin")) 
                         {
                     ?>
                         <div class="text-field">
