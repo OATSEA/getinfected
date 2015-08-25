@@ -12,8 +12,8 @@
     {
         $sSiteUrl = (isset($_SERVER["HTTP_HOST"]) ? "http://".$_SERVER["HTTP_HOST"] : '');
         $sRequestUrl = $sSiteUrl.$_SERVER['REQUEST_URI'];
-        //$protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-        $protocol = $sRequestUrl;//"://" . $_SERVER['HTTP_HOST'];
+        $protocol = $sRequestUrl;
+        define("ROOT_DIR",getcwd());
     }
 ?>
 <html>
