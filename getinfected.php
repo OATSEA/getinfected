@@ -658,12 +658,12 @@
 
                 // current test stub instead of admin page opens in new window:
                 // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
-                echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'/admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
-                if(file_exists($sDestination))
+                 if(file_exists($sDestination))
                 {
                     require_once($sDestination);
                 }
-                $installed=1;
+                echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'/admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
+               $installed=1;
             }
             else 
             {
@@ -947,11 +947,11 @@
 
                 // current test stub instead of admin page opens in new window:
                 // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
-                echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'/admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 if(file_exists($sDestination))
                 {
                     require_once($sDestination);
                 }
+                echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'/admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 $installed=1;
             } // END Download if zipfile doesn't already exists
         }
