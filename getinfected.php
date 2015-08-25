@@ -1,7 +1,6 @@
 <?php 
     if(session_status()!=PHP_SESSION_ACTIVE) session_start();
     error_reporting(E_ALL ^ E_WARNING);
-    $sFolderPath = $_SERVER['DOCUMENT_ROOT'];
     $sDestination = getcwd().'/data/bootstrap.php';
     
     if(file_exists($sDestination))
