@@ -13,7 +13,7 @@
         $sSiteUrl = (isset($_SERVER["HTTP_HOST"]) ? "http://".$_SERVER["HTTP_HOST"] : '');
         $sRequestUrl = $sSiteUrl.$_SERVER['REQUEST_URI'];
         $protocol = $sRequestUrl;
-        define("ROOT_DIR",getcwd()); 
+        define("ROOT_DIR",getcwd());
     }
 ?>
 <html>
