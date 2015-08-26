@@ -655,7 +655,7 @@
                 // ** TO DO ***
 
                 // current test stub instead of admin page opens in new window:
-                echo $sDestination = getcwd().'/data/bootstrap.php';
+                $sDestination = getcwd().'/data/bootstrap.php';
                 if(file_exists($sDestination))
                 {
                     require_once($sDestination);
