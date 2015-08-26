@@ -1,11 +1,15 @@
 <?php 
     if(session_status()!=PHP_SESSION_ACTIVE) session_start();
     error_reporting(E_ALL ^ E_WARNING);
-    $sDestination = getcwd().'/data/bootstrap.php';
     
-    if(file_exists($sDestination))
+    if(file_exists(getcwd().'/data/constants.php'))
     {
-        require_once($sDestination);
+        require_once(getcwd().'/data/constants.php');
+        $protocol = SITE_URL;
+    }
+    else if(file_exists(getcwd().'/data/bootstrap.php'))
+    {
+        require_once(getcwd().'/data/bootstrap.php');
         $protocol = SITE_URL;
     }
     else
@@ -655,10 +659,13 @@
                 // ** TO DO ***
 
                 // current test stub instead of admin page opens in new window:
-                $sDestination = getcwd().'/data/bootstrap.php';
-                if(file_exists($sDestination))
+                if(file_exists(getcwd().'/data/constants.php'))
                 {
-                    require_once($sDestination);
+                    require_once(getcwd().'/data/constants.php');
+                }
+                else if(file_exists(getcwd().'/data/bootstrap.php'))
+                {
+                    require_once(getcwd().'/data/bootstrap.php');
                 }
                 echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'/admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 $installed=1;
@@ -944,10 +951,13 @@
                 // ** TO DO ***
 
                 // current test stub instead of admin page opens in new window:
-                $sDestination = getcwd().'/data/bootstrap.php';
-                if(file_exists($sDestination))
+                if(file_exists(getcwd().'/data/constants.php'))
                 {
-                    require_once($sDestination);
+                    require_once(getcwd().'/data/constants.php');
+                }
+                else if(file_exists(getcwd().'/data/bootstrap.php'))
+                {
+                    require_once(getcwd().'/data/bootstrap.php');
                 }
                 echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'/admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 $installed=1;
@@ -975,10 +985,14 @@ if($_SESSION['isValidation']['flag'] == 1)
         $_SESSION['isLoggedIn'] = isset($_SESSION['isLoggedIn']) ? $_SESSION['isLoggedIn'] : FALSE;
         if((is_dir("admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
-            $sDestination = getcwd().'/data/bootstrap.php';
-            if($sDestination)
+            if(file_exists(getcwd().'/data/constants.php'))
             {
-                require_once($sDestination);
+                require_once(getcwd().'/data/constants.php');
+                $protocol = SITE_URL;
+            }
+            else if(file_exists(getcwd().'/data/bootstrap.php'))
+            {
+                require_once(getcwd().'/data/bootstrap.php');
                 $protocol = SITE_URL;
             }
             else
@@ -988,7 +1002,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 //$protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
                 $protocol = $sRequestUrl;//"://" . $_SERVER['HTTP_HOST'];
             }
-            redirect($protocol.'admin');
+            redirect($protocol.'/admin');
         }
         else if(!$installed)
         {
