@@ -988,7 +988,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 //$protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
                 $protocol = $sRequestUrl;//"://" . $_SERVER['HTTP_HOST'];
             }
-            redirect($protocol.'/admin');
+            redirect($protocol.'admin');
         }
         else if(!$installed)
         {
