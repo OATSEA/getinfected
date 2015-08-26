@@ -13,7 +13,7 @@
         $sSiteUrl = (isset($_SERVER["HTTP_HOST"]) ? "http://".$_SERVER["HTTP_HOST"] : '');
         $sRequestUrl = $sSiteUrl.$_SERVER['REQUEST_URI'];
         $protocol = $sRequestUrl;
-        define("ROOT_DIR",getcwd()); 
+        define("ROOT_DIR",getcwd());
     }
 ?>
 <html>
@@ -222,7 +222,6 @@
             
                if (is_dir($dir)) { 
                  $objects = scandir($dir); 
-                 //var_dump($objects);exit;
                  foreach ($objects as $object) { 
                    if ($object != "." && $object != "..") { 
                        
@@ -266,7 +265,6 @@
                 rrmdir('content');
             }
             //}
-             // END RRMDIRexit;
             // getinfected.php is the initial teacher virus PHP infection script that is used to install the core Teacher Virus files.
             // Created: May 2015
             // Contributors: Harry Longworth
@@ -657,13 +655,13 @@
                 // ** TO DO ***
 
                 // current test stub instead of admin page opens in new window:
-                // echo '<h2>Infection Complete!</h2><p>Check infection has worked: </p><p><a href="admin" target="_blank">Click Here for Admin Page</a></p><p>or</p><p><a href="play" target="_blank">Click Here for PLAY Page</a></p>'; $_SESSION['isValidation']['flag'] = FALSE;
-                 if(file_exists($sDestination))
+                echo $sDestination = getcwd().'/data/bootstrap.php';
+                if(file_exists($sDestination))
                 {
                     require_once($sDestination);
                 }
                 echo '<h2>Infection Complete!</h2><h2><a href="'.SITE_URL.'admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
-               $installed=1;
+                $installed=1;
             }
             else 
             {
@@ -946,6 +944,7 @@
                 // ** TO DO ***
 
                 // current test stub instead of admin page opens in new window:
+                $sDestination = getcwd().'/data/bootstrap.php';
                 if(file_exists($sDestination))
                 {
                     require_once($sDestination);
@@ -976,6 +975,7 @@ if($_SESSION['isValidation']['flag'] == 1)
         $_SESSION['isLoggedIn'] = isset($_SESSION['isLoggedIn']) ? $_SESSION['isLoggedIn'] : FALSE;
         if((is_dir("admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
+            $sDestination = getcwd().'/data/bootstrap.php';
             if($sDestination)
             {
                 require_once($sDestination);
