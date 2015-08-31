@@ -18,6 +18,7 @@
         $sRequestUrl = $sSiteUrl.$_SERVER['REQUEST_URI'];
         $protocol = $sRequestUrl;
         define("ROOT_DIR",getcwd());
+        define('SHOW_CHMOD','1');
     }
 ?>
 <html>
@@ -1226,10 +1227,12 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : '0'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
                     </div>
                     <br/>
+                    <?php if(SHOW_CHMOD == 1){?>
                     <div>
                         <b>Chmod?</b>
                         <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : '0'; ?>" <?php echo isset($_POST['chmod']) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
                     </div>
+                    <?php }?>
                      <br/>
                     <div class="mandatory"><font color="red">*</font> indicates mandatory field</div>
                 </div>
