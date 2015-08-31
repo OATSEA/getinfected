@@ -222,7 +222,13 @@
                 $_SESSION['isValidation']['flag'] = FALSE;
             }
         }
-        function rrmdir($dir) {
+        
+        if($_SESSION['isValidation']['flag'] == 1)
+        {
+            $_SESSION['teachervirus_branch'] = $sBranchName;
+            
+            function rrmdir($dir)
+            {
             
                if (is_dir($dir)) { 
                  $objects = scandir($dir); 
@@ -243,8 +249,6 @@
                  rmdir($dir);
                } 
             }
-        if($_SESSION['isValidation']['flag'] == 1)
-        {
             if($bDownloadLatestVersion)
             {
                 if($bInfectFiles)
@@ -1136,7 +1140,7 @@ if($_SESSION['isValidation']['flag'] == 1)
     ?>
             <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
             <div class="color-white">
-                <a class="play_img" href="<?php echo $protocol.'admin'; ?>">
+                <a class="play_img" href="<?php echo $protocol.'/admin'; ?>">
                     <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
                 </a>
             </div><br/><br/>
@@ -1195,7 +1199,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <div id="branch_value" style="display:none;" class="sources">
                             <br/><br/>
                             <div class="text-field">Branch?<font color="red">*</font></div>
-                            <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : 'master'; ?>" name="branch_name" id="branch_name">
+                            <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'master'; ?>" name="branch_name" id="branch_name">
                             <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
                             <div class="error-message">
                                 <?php echo isset($_SESSION['isValidation']['branch_name']) ? $_SESSION['isValidation']['branch_name'] : '';?>
