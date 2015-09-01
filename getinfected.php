@@ -19,6 +19,7 @@
         $protocol = $sRequestUrl;
         define("ROOT_DIR",getcwd());
         define('SHOW_MOD','1');
+        define('DEBUG_TEXT','1');
     }
 ?>
 <html>
@@ -610,7 +611,7 @@
                         // if file already exists remove it
                         if (file_exists($newFile) && !is_dir($newFile)) {
                             //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
-                            ($bChmod) ? chmod($newFile, 0777) : '';
+                            ($bChmod) ? chmod($newFile, 0755) : '';
                             unlink($newFile);
                         }
 
@@ -902,7 +903,7 @@
                         // if file already exists remove it
                         if (file_exists($newFile) && !is_dir($newFile)) {
                             //if($debug) { echo "<p>File $newFile already exists - Deleting</p>"; }
-                            ($bChmod) ? chmod($newFile, 0777) : '';
+                            ($bChmod) ? chmod($newFile, 0755) : '';
                             unlink($newFile);
                         }
 
@@ -1191,14 +1192,14 @@ if($_SESSION['isValidation']['flag'] == 1)
                             <input type="checkbox" name="download_latest_version" id="download_latest_version" value="<?php echo isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['download_latest_version']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('download_latest_version');">
                         </div>
                         <br/>
-                        <?php
-                            }
-                        ?>
+                    <?php
+                        }
+                    ?>
                         <div id="infection_sources">
                         <div style="font-weight:bold;">Infection Source:</div><br/>
                         <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
                         <div id="branch_value" style="display:none;" class="sources">
-                            <br/><br/>
+                            <br/>
                             <div class="text-field">Branch?<font color="red">*</font></div>
                             <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'master'; ?>" name="branch_name" id="branch_name">
                             <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
@@ -1221,24 +1222,32 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <input type="text" name="port_number" id="port_number" value="8080">
                         <input type="button" value="Clear" onclick="removePort('port_number');"/>
                         <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
-                    </div><br/><br/>
+                    </div><br/>
                     <div>
                         <b>Show debug text</b>
-                        <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : '0'; ?>" <?php echo isset($_POST['show_debug']) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
+                        <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : DEBUG_TEXT; ?>" <?php echo (DEBUG_TEXT == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
                     </div>
                     <br/>
-                    <?php if(SHOW_MOD == 1){?>
-                        <div>
-                            <b>Chmod?</b>
-                            <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : '0'; ?>" <?php echo (SHOW_CHMOD == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
-                        </div>
-                    <?php }else{?>
-                    <div style="display: none;">
-                        <b>Chmod?</b>
-                        <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : '0'; ?>" <?php echo (SHOW_CHMOD == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
-                        </div>
-                        
-                        <?php }?>
+                    <?php 
+                        if(SHOW_MOD == 1)
+                        {
+                    ?>
+                            <div>
+                                <b>Chmod?</b>
+                                <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : SHOW_CHMOD; ?>" <?php echo (SHOW_CHMOD == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
+                            </div>
+                    <?php 
+                        }
+                        else
+                        {
+                    ?>
+                            <div style="display: none;">
+                                <b>Chmod?</b>
+                                <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : SHOW_CHMOD; ?>" <?php echo (SHOW_CHMOD == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
+                            </div>
+                    <?php 
+                        }
+                    ?>
                      <br/>
                     <div class="mandatory"><font color="red">*</font> indicates mandatory field</div>
                 </div>
