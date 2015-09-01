@@ -1191,9 +1191,9 @@ if($_SESSION['isValidation']['flag'] == 1)
                             <input type="checkbox" name="download_latest_version" id="download_latest_version" value="<?php echo isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['download_latest_version']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('download_latest_version');">
                         </div>
                         <br/>
-                    <?php
-                        }
-                    ?>
+                        <?php
+                            }
+                        ?>
                         <div id="infection_sources">
                         <div style="font-weight:bold;">Infection Source:</div><br/>
                         <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
