@@ -18,7 +18,6 @@
         $sRequestUrl = $sSiteUrl.$_SERVER['REQUEST_URI'];
         $protocol = $sRequestUrl;
         define("ROOT_DIR",getcwd());
-        define('SHOW_MOD','1');
         define('DEBUG_TEXT','1');
     }
 ?>
@@ -1241,7 +1240,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         else
                         {
                     ?>
-                            <div>
+                            <div style="<?php echo (SHOW_MOD == 1) ? "display:block" : "display:none;"?>">
                                 <b>Chmod?</b>
                                 <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : ''; ?>" <?php echo (isset($_POST['chmod']) && $_POST['chmod'] == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
                             </div>
