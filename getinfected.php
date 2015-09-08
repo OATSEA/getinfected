@@ -18,7 +18,7 @@
         $sRequestUrl = $sSiteUrl.$_SERVER['REQUEST_URI'];
         $protocol = $sRequestUrl;
         define("ROOT_DIR",getcwd());
-        define('DEBUG_TEXT','1');
+        define('DEBUG_TEXT','0');
     }
 ?>
 <html>
@@ -1237,14 +1237,22 @@ if($_SESSION['isValidation']['flag'] == 1)
                             </div>
                     <?php 
                         }
-                        else
+                        else if(SHOW_CHMOD == 1)
                         {
                     ?>
-                            <div style="<?php echo (SHOW_MOD == 1) ? "display:block" : "display:none;"?>">
+                            <div style="<?php echo (SHOW_MOD == 1) ? 'display:block' : 'display:none'; ?>">
                                 <b>Chmod?</b>
-                                <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : ''; ?>" <?php echo (isset($_POST['chmod']) && $_POST['chmod'] == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
+                                <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : SHOW_CHMOD ; ?>" <?php echo (isset($_POST['chmod']) && $_POST['chmod'] == 1) ? "checked='checked'" : (SHOW_CHMOD == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
                             </div>
                     <?php 
+                        }
+                        else
+                        {
+                    ?>      <div style="display:block">
+                                <b>Chmod?</b>
+                                <input type="checkbox" name="chmod" id="chmod" value="<?php echo isset($_POST['chmod']) ? $_POST['chmod'] : "" ; ?>" <?php echo (isset($_POST['chmod']) && $_POST['chmod'] == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('chmod');">
+                            </div>
+                    <?php
                         }
                     ?>
                      <br/>
