@@ -1212,7 +1212,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                                 <div class="full-width">   
                                     <div class="branch-class" <?php if(SHOW_TV == 1) { echo 'style="display:block"';} else { echo 'style="display:none"';}?>>
                                         <div class="text-field">Branch?<font color="red">*</font></div>
-                                        <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'dev3'; ?>" name="branch_name" id="branch_name">
+                                        <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'master'; ?>" name="branch_name" id="branch_name">
                                         <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
                                         <div class="error-message">
                                             <?php echo isset($_SESSION['isValidation']['branch_name']) ? $_SESSION['isValidation']['branch_name'] : '';?>
