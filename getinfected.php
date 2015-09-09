@@ -1206,20 +1206,20 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <div id="infection_sources">
                             <div style="font-weight:bold;">Infection Source:</div><br/>
                             <div class="full-width">
-                            <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
+                                <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
                             </div>
                             <div id="branch_value" style="display:none;" class="sources">
                                 <div class="full-width">   
                                     <div class="branch-class" <?php if(SHOW_TV == 1) { echo 'style="display:block"';} else { echo 'style="display:none"';}?>>
                                         <div class="text-field">Branch?<font color="red">*</font></div>
-                                        <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'master'; ?>" name="branch_name" id="branch_name">
-                                        <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
+                                            <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'master'; ?>" name="branch_name" id="branch_name">
+                                            <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
                                         <div class="error-message">
                                             <?php echo isset($_SESSION['isValidation']['branch_name']) ? $_SESSION['isValidation']['branch_name'] : '';?>
                                         </div>
-                                    </div>
+                                    </div><br/>
                                 </div>
-                            </div><br/>
+                            </div>
                             <div class="full-width">
                                 <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
                             </div><br/>
