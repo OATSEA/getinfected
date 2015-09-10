@@ -70,11 +70,20 @@
                         color: blue;
                     }
                 input[type="text"] {
-                    color: #000;
-                    float: left;
-                    width: 35%;
+                    background-image: none;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+                    color: #555;
                     display: block;
-                    margin-bottom: 10px;
+                    float: left;
+                    font-size: 14px;
+                    height: 26px;
+                    line-height: 1.42857;
+                    padding: 6px 12px;
+                    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+                    width: 35%;
+                    float: left;
                     background-color: wheat;
                 }
                 .payload-details{
@@ -174,8 +183,26 @@
                 .full-widthdebug{
                         width: 100%;
                         min-height: 5px;
-                        margin: 10px;
+                        margin: 15px;
                     }
+                .full-widthdebug1{
+                    width: 100%;
+                    min-height: 5px;
+                    margin: 15px 15px 15px 20px;
+                }
+                .clear-button > input {
+                    padding: 1.5px;
+                }
+                .full-radio1{
+                    width: 100%;
+                    margin: -5px 15px;
+                    min-height: 0px;
+                }
+                .full-radio{
+                    width: 100%;
+                    margin: 15px;
+                    min-height: 0px;
+                }
         </style>
         <script type="text/javascript">
             function checkLoaded(loaded){
@@ -1147,8 +1174,8 @@ if($_SESSION['isValidation']['flag'] == 1)
     <?php 
         if (is_dir(ROOT_DIR."/admin")) 
         {
-    ?>
-            <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    ?>  
+        <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
             <div class="color-white">
                 <a class="play_img" href="<?php echo $protocol.'/admin'; ?>">
                     <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
@@ -1157,90 +1184,99 @@ if($_SESSION['isValidation']['flag'] == 1)
     <?php 
         } 
     ?>  
-        <form method="post" action="" id="getinfected_form">
-            <div id="container">
-                <div class="payload-details">
+    <form method="post" action="" id="getinfected_form">
+        <div id="container">
+            <div class="payload-details">
                 <?php 
                     echo is_dir(ROOT_DIR."/admin") ? "<h2>Update Teacher Virus</h2>" : "<h2>Ready to Get Infected?</h2>";
                 ?>
+            </div>
+            <div class="full-widthdebug">
+                <input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggleVisibility('main','show_settings');">
+            </div>
+        <div id="main" style="display:none">
+                <div class="full-widthdebug">
+                    <input type="button" value="Update Get Infected ?" onclick="location.href='tv/updategetinfected/';">
                 </div>
-                <div>
-                    <input type="button" id="show_settings" value="Show Advanced Settings" onclick="toggleVisibility('main','show_settings');">
-                </div><br/>
-                <div id="main" style="display:none">
-                    <div>
-                        <input type="button" value="Update Get Infected ?" onclick="location.href='tv/updategetinfected/';">
-                    </div><br/>
-                    <?php 
-                        if (is_dir(ROOT_DIR."/admin")) 
-                        {
-                    ?>
-                        <div class="text-field">
-                            <b>Remove Current Installation?</b>
-                            <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('remove_previous_install');">
-                        </div>
-                        <br/><br/>
-                        <div>
-                            <input type="button" id="show_delete_option" value="Show Options" onclick="toggleDeleteFile('delete_file','show_delete_option');">
-                        </div>
-                        <br/>
-                        <div id="delete_file" style="display:none">
-                            <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
-                            <br/><br/>
-                            <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads
-                            <br/><br/>
-                            <input type="checkbox" name="admin_payload" id="admin_payload" value="<?php echo isset($_POST['admin_payload']) ? $_POST['admin_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['admin_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('admin_payload');">Delete Admin Payloads
-                            <br/><br/>
-                            <input type="checkbox" name="delete_content" id="delete_content" value="<?php echo isset($_POST['delete_content']) ? $_POST['delete_content'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_content']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_content');" >Delete Content
-                            <br/><br/>
-                        </div>
-                        <br/>
-                        <div class="text-field">
-                            <b>Download Latest Version?</b>
-                            <input type="checkbox" name="download_latest_version" id="download_latest_version" value="<?php echo isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['download_latest_version']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('download_latest_version');">
-                        </div>
-                        <br/>
-                    <?php
-                        }
-                    ?>
-                        <div id="infection_sources">
-                            <div style="font-weight:bold;">Infection Source:</div><br/>
-                            <div class="full-width">
-                                <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
-                            </div>
-                            <div id="branch_value" style="display:none;" class="sources">
-                                <div class="full-width">   
-                                    <div class="branch-class" <?php if(SHOW_TV == 1) { echo 'style="display:block"';} else { echo 'style="display:none"';}?>>
-                                        <div class="text-field">Branch?<font color="red">*</font></div>
-                                            <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'master'; ?>" name="branch_name" id="branch_name">
-                                            <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
-                                        <div class="error-message">
-                                            <?php echo isset($_SESSION['isValidation']['branch_name']) ? $_SESSION['isValidation']['branch_name'] : '';?>
-                                        </div>
-                                    </div><br/>
+                <?php 
+                    if (is_dir(ROOT_DIR."/admin")) 
+                    {
+                ?>
+                <div class="full-widthdebug">
+                    <div class="text-field">
+                        <b>Remove Current Installation?</b>
+                        <input type="checkbox" name="remove_previous_install" id="remove_previous_install" value="<?php echo isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : empty($_POST) ? '0' : '1'; ?>" <?php echo isset($_POST['remove_previous_install']) ? "checked='checked'" : empty($_POST) ? "" : "checked = 'checked'"; ?> onclick="changeValue('remove_previous_install');">
+                    </div>
+                </div>
+                <div class="full-widthdebug">
+                    <input type="button" id="show_delete_option" value="Show Options" onclick="toggleDeleteFile('delete_file','show_delete_option');">
+                </div>
+                <div id="delete_file" style="display:none">
+                    <div class="full-widthdebug">
+                        <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
+                    </div>
+                    <div class="full-widthdebug">
+                        <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads
+                    </div>
+                    <div class="full-widthdebug">
+                        <input type="checkbox" name="admin_payload" id="admin_payload" value="<?php echo isset($_POST['admin_payload']) ? $_POST['admin_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['admin_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('admin_payload');">Delete Admin Payloads
+                    </div>
+                    <div class="full-widthdebug">
+                        <input type="checkbox" name="delete_content" id="delete_content" value="<?php echo isset($_POST['delete_content']) ? $_POST['delete_content'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_content']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_content');" >Delete Content
+                    </div>
+                </div>
+                <div class="full-widthdebug">
+                    <div class="text-field">
+                        <b>Download Latest Version?</b>
+                        <input type="checkbox" name="download_latest_version" id="download_latest_version" value="<?php echo isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['download_latest_version']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('download_latest_version');">
+                    </div>
+                </div>
+                <?php
+                    }
+                ?>
+                <div id="infection_sources">
+                    <div class="full-widthdebug">
+                        <div style="font-weight:bold;">Infection Source:</div>
+                    </div>
+                    <div class="full-radio1">
+                        <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
+                    </div>
+                    <div id="branch_value" class="sources">
+                        <div class="full-widthdebug">   
+                            <div class="branch-class" <?php if(SHOW_TV == 1) { echo '';} else { echo 'style="display:none"';}?>>
+                                <div class="text-field">Branch?<font color="red">*</font></div>
+                                    <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'master'; ?>" name="branch_name" id="branch_name">
+                                    <div class="clear-button">
+                                        <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
+                                    </div>
+                                <div class="error-message">
+                                    <?php echo isset($_SESSION['isValidation']['branch_name']) ? $_SESSION['isValidation']['branch_name'] : '';?>
                                 </div>
                             </div>
-                            <div class="full-width">
-                                <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
-                            </div><br/>
                         </div>
-                    <div id="infected_device" style="display:none;" class="sources">
-                        <div class="text-field">Infected Device Address <font color="red">*</font></div>
-                        <input type="text" name="device_address">
-                        <div class="error-message">
-                            <?php echo isset($_SESSION['isValidation']['device_address']) ? $_SESSION['isValidation']['device_address'] : '';?>
-                        </div>
-                        <br/><br/>
-                        <div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 or demo.teachervirus.org</div><br/>
-                        <div class="text-field">Port</div>
-                        <input type="text" name="port_number" id="port_number" value="8080">
-                        <input type="button" value="Clear" onclick="removePort('port_number');"/>
-                        <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
                     </div>
-                <div class="full-widthdebug">
-                    <div <?php if(DEBUG_TEXT == 1) { echo 'style="display:block"';} else { echo 'style="display:none"';}?>>
-                        <b>Show debug text</b>
-                        <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : DEBUG_TEXT; ?>" <?php echo (DEBUG_TEXT == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
+                    <div class="full-radio">
+                        <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
+                    </div>
+                </div>
+                <div id="infected_device" style="display:none;" class="sources">
+                    <div class="text-field">Infected Device Address <font color="red">*</font></div>
+                    <input type="text" name="device_address">
+                    <div class="error-message">
+                        <?php echo isset($_SESSION['isValidation']['device_address']) ? $_SESSION['isValidation']['device_address'] : '';?>
+                    </div>
+                    <br/><br/>
+                    <div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 or demo.teachervirus.org</div><br/>
+                    <div class="text-field">Port</div>
+                    <input type="text" name="port_number" id="port_number" value="8080">
+                    <input type="button" value="Clear" onclick="removePort('port_number');"/>
+                    <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
+                </div>
+                
+                <div <?php if(DEBUG_TEXT == 1) { echo 'style="display:block"';} else { echo 'style="display:none"';}?>>
+                    <div class="full-widthdebug1">
+                    <b>Show debug text</b>
+                    <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : DEBUG_TEXT; ?>" <?php echo (DEBUG_TEXT == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
                     </div>
                 </div>
                 <div class="full-width">
@@ -1265,17 +1301,17 @@ if($_SESSION['isValidation']['flag'] == 1)
                     }
                     ?>
                 </div>
-                <div class="full-width">
+                <div class="full-widthdebug">
                     <div class="mandatory"><font color="red">*</font> Indicates mandatory field</div>
                 </div>
-                </div>
-                
+        </div>
+
                 <div class="go-button">
                     <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
                 </div><br/>    
-            </div>
-            <input type="hidden" name="setting_value" id="setting_value">
-        </form>
+                </div>
+                <input type="hidden" name="setting_value" id="setting_value">
+    </form>
 <?php
         }
     }
