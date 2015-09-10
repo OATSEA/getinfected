@@ -21,7 +21,7 @@
         define('DEBUG_TEXT','0');
     }
 ?>
-<html>
+<html> 
     <head>
         <title>Get Infected</title>
         <meta charset="utf-8">
@@ -80,7 +80,7 @@
                     font-size: 14px;
                     height: 26px;
                     line-height: 1.42857;
-                    padding: 6px 12px;
+                    padding: 0px 12px;
                     transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
                     width: 35%;
                     float: left;
@@ -482,7 +482,7 @@
                     if($debug) {echo "<p>Address has been provided as: $ip</p>"; }
                 } else {
                     $ip="no";
-                } // end IP is set check
+                } // end IP is set checke
 
             //} //  END play check
             
@@ -508,7 +508,7 @@
             $infectdir = $infect.'/'; // infect directory with trailing slash for URL use
 
             $zipfile = $infectdir.$download_filename;
-
+            $sInfectedZipFile = $infectdir.'OATSEA-getinfetced.zip';
             // Check for IP param and set $ip if param provided
             // ** TO DO **
             
@@ -516,7 +516,6 @@
             if (file_exists($zipfile) && $bDownloadLatestVersion == 0) 
             {
                 $geturl = $protocol.'/'.$zipfile;
-                
                 // TRY DOWNLOAD via copy
                 if ($debug) { echo "<h2>Repair From Local</h2>
                    <p>Will attempt to copy from <b>$geturl</b></p> ";}
@@ -716,9 +715,13 @@
                 if ($ip=="no") {
                     // Download from github zipball/master as no IP address set
                     $geturl = (!empty($sBranchName) && isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "https://github.com/$username/$repo/zipball/$sBranchName/" : "https://github.com/$username/$repo/zipball/master/";
+                    $sGetInfectedGetUrl = "https://github.com/$username/getinfected/zipball/master/";
+                    copy($sGetInfectedGetUrl,$sInfectedZipFile);
                 } else {
                     // as IP address has been set attempt download from IP address
                    $geturl = empty($nPort) ? "http://$ip/$zipfile" : "http://$ip:$nPort/$zipfile";
+                   $sGetInfectedGetUrl = empty($nPort) ? "http://$ip/$sInfectedZipFile" : "http://$ip:$nPort/$sInfectedZipFile";
+                   copy($sGetInfectedGetUrl,$sInfectedZipFile);
                 }
                 // TRY DOWNLOAD via copy
                 if ($debug) { echo "<h2>Download Files</h2>
@@ -1279,7 +1282,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                     <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : DEBUG_TEXT; ?>" <?php echo (DEBUG_TEXT == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
                     </div>
                 </div>
-                <div class="full-width">
+                <div class="full-widthdebug">
                     <?php 
                         if($bChmod == 0 )
                         {
