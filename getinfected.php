@@ -19,6 +19,8 @@
         $protocol = $sRequestUrl;
         define("ROOT_DIR",getcwd());
         define('DEBUG_TEXT','0');
+        define('INFECTED_RESOURCE','G');
+        define('DEVICE_ADDRESS','0');
     }
 ?>
 <html> 
@@ -234,6 +236,7 @@
     {
         $bRemovePreviousInstall = isset($_POST['remove_previous_install']) ? $_POST['remove_previous_install'] : 0;
         $bDownloadLatestVersion = isset($_POST['download_latest_version']) ? $_POST['download_latest_version'] : 0;
+        $sInfectionResource = (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "G" : "I";
         $sBranchName = $_POST['branch_name'];
         $sDeviceAddress = $_POST['device_address'];
         $nPort = $_POST['port_number'];
@@ -262,8 +265,10 @@
         
         if($_SESSION['isValidation']['flag'] == 1)
         {
+            $_SESSION['infection_resource'] = $sInfectionResource;
             $_SESSION['teachervirus_branch'] = $sBranchName;
-            
+            $_SESSION['device_address'] = $sDeviceAddress;
+            $_SESSION['port_number'] = $nPort;
             function rrmdir($dir)
             {
             
@@ -1242,13 +1247,13 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <div style="font-weight:bold;">Infection Source:</div>
                     </div>
                     <div class="full-radio1">
-                        <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "checked='checked'" : "checked='checked'"; ?> onclick="showData('branch_value');">GitHub
+                        <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == 'branch_value') ? "checked='checked'" : (INFECTED_RESOURCE == 'G') ? "checked='checked'" : ""; ?> onclick="showData('branch_value');">GitHub
                     </div>
                     <div id="branch_value" class="sources">
                         <div class="full-widthdebug">   
-                            <div class="branch-class" <?php if(SHOW_TV == 1) { echo '';} else { echo 'style="display:none"';}?>>
+                            <div class="branch-class" <?php if(SHOW_TV == 1) { echo  'style="display:block';} else { echo 'style="display:none"';}?>>
                                 <div class="text-field">Branch?<font color="red">*</font></div>
-                                    <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'master'; ?>" name="branch_name" id="branch_name">
+                                    <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'dev3'; ?>" name="branch_name" id="branch_name">
                                     <div class="clear-button">
                                         <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
                                     </div>
@@ -1259,27 +1264,26 @@ if($_SESSION['isValidation']['flag'] == 1)
                         </div>
                     </div>
                     <div class="full-radio">
-                        <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == "infected_device" ) ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
+                        <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == 'infected_device') ? "checked='checked'" : (INFECTED_RESOURCE == 'I') ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
                     </div>
                 </div>
                 <div id="infected_device" style="display:none;" class="sources">
                     <div class="text-field">Infected Device Address <font color="red">*</font></div>
-                    <input type="text" name="device_address">
+                    <input type="text" name="device_address" value="<?php echo isset($_POST['device_address']) ? $_POST['device_address'] : DEVICE_ADDRESS; ?>">
                     <div class="error-message">
                         <?php echo isset($_SESSION['isValidation']['device_address']) ? $_SESSION['isValidation']['device_address'] : '';?>
                     </div>
                     <br/><br/>
                     <div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 or demo.teachervirus.org</div><br/>
                     <div class="text-field">Port</div>
-                    <input type="text" name="port_number" id="port_number" value="8080">
+                    <input type="text" name="port_number" id="port_number" value="8080 <?php echo isset($_POST['port_number']) ? $_POST['port_number'] : PORT_NUMBER; ?>">
                     <input type="button" value="Clear" onclick="removePort('port_number');"/>
                     <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
                 </div>
-                
                 <div <?php if(DEBUG_TEXT == 1) { echo 'style="display:block"';} else { echo 'style="display:none"';}?>>
                     <div class="full-widthdebug1">
                     <b>Show debug text</b>
-                    <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : DEBUG_TEXT; ?>" <?php echo (DEBUG_TEXT == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
+                        <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : DEBUG_TEXT; ?>" <?php echo (DEBUG_TEXT == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
                     </div>
                 </div>
                 <div class="full-widthdebug">
