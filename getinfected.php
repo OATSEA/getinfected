@@ -20,7 +20,8 @@
         define("ROOT_DIR",getcwd());
         define('DEBUG_TEXT','0');
         define('INFECTED_RESOURCE','G');
-        define('DEVICE_ADDRESS','0');
+        define('DEVICE_ADDRESS','');
+        define('PORT_NUMBER','8080');
     }
 ?>
 <html> 
@@ -205,6 +206,16 @@
                     margin: 15px;
                     min-height: 0px;
                 }
+                .full-inner{
+                    width: 100%;
+                    margin: 15px 15px 15px 50px;
+                    min-height: 0px;
+                }
+                .full-chmod {
+                    margin: 15px 15px 15px 29px;
+                    min-height: 5px;
+                    width: 100%;
+}
         </style>
         <script type="text/javascript">
             function checkLoaded(loaded){
@@ -265,10 +276,21 @@
         
         if($_SESSION['isValidation']['flag'] == 1)
         {
-            $_SESSION['infection_resource'] = $sInfectionResource;
-            $_SESSION['teachervirus_branch'] = $sBranchName;
-            $_SESSION['device_address'] = $sDeviceAddress;
-            $_SESSION['port_number'] = $nPort;
+            if($sInfectionResource == "G")
+            {
+                $_SESSION['infection_resource'] = $sInfectionResource;
+                $_SESSION['teachervirus_branch'] = $sBranchName;
+                $_SESSION['device_address'] = '';
+                $_SESSION['port_number'] = '';
+            }
+            else
+            {
+                $_SESSION['infection_resource'] = $sInfectionResource;
+                $_SESSION['teachervirus_branch'] = 'master';
+                $_SESSION['device_address'] = $sDeviceAddress;
+                $_SESSION['port_number'] = $nPort;
+            }
+            
             function rrmdir($dir)
             {
             
@@ -1144,7 +1166,7 @@ if($_SESSION['isValidation']['flag'] == 1)
             }
             window.onload = function ()
             {
-                showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : 'branch_value'; ?>");
+                showData("<?php echo isset($_POST['infection_resource']) ? $_POST['infection_resource'] : (INFECTED_RESOURCE == "G") ? 'branch_value' : 'infected_device'; ?>");
                 showMain("<?php echo isset($_POST['setting_value']) ? $_POST['setting_value'] : ''?>");
                 disableDelete("<?php echo is_dir(ROOT_DIR."/admin") ? 1 : 0; ?>")
             }
@@ -1249,9 +1271,9 @@ if($_SESSION['isValidation']['flag'] == 1)
                     <div class="full-radio1">
                         <input type="radio" name="infection_resource" value="branch_value" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == 'branch_value') ? "checked='checked'" : (INFECTED_RESOURCE == 'G') ? "checked='checked'" : ""; ?> onclick="showData('branch_value');">GitHub
                     </div>
-                    <div id="branch_value" class="sources">
-                        <div class="full-widthdebug">   
-                            <div class="branch-class" <?php if(SHOW_TV == 1) { echo  'style="display:block';} else { echo 'style="display:none"';}?>>
+                    <div id="branch_value" class="sources" style="<?php echo (INFECTED_RESOURCE == 'G') ? 'display:block' : 'display:none';?>">
+                        <div class="full-widthdebug">
+                            <div class="branch-class" style="<?php echo (SHOW_TV == 1) ? 'display:block' : 'display:none';?>">
                                 <div class="text-field">Branch?<font color="red">*</font></div>
                                     <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/constants.php')) ? TV_BRANCH : 'dev3'; ?>" name="branch_name" id="branch_name">
                                     <div class="clear-button">
@@ -1264,21 +1286,21 @@ if($_SESSION['isValidation']['flag'] == 1)
                         </div>
                     </div>
                     <div class="full-radio">
-                        <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == 'infected_device') ? "checked='checked'" : (INFECTED_RESOURCE == 'I') ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
+                        <input type="radio" name="infection_resource" value="infected_device" <?php echo (isset($_POST['infection_resource']) && $_POST['infection_resource'] == 'infected_device') ? "checked='checked'" : (INFECTED_RESOURCE == 'I')  ? "checked='checked'" : ""; ?> onclick="showData('infected_device');">Infected Device
                     </div>
                 </div>
-                <div id="infected_device" style="display:none;" class="sources">
+                <div id="infected_device" class="sources" style="<?php echo (INFECTED_RESOURCE == 'I') ? 'display:block' : 'display:none';?>">
                     <div class="text-field">Infected Device Address <font color="red">*</font></div>
-                    <input type="text" name="device_address" value="<?php echo isset($_POST['device_address']) ? $_POST['device_address'] : DEVICE_ADDRESS; ?>">
-                    <div class="error-message">
-                        <?php echo isset($_SESSION['isValidation']['device_address']) ? $_SESSION['isValidation']['device_address'] : '';?>
-                    </div>
-                    <br/><br/>
-                    <div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 or demo.teachervirus.org</div><br/>
-                    <div class="text-field">Port</div>
-                    <input type="text" name="port_number" id="port_number" value="8080 <?php echo isset($_POST['port_number']) ? $_POST['port_number'] : PORT_NUMBER; ?>">
-                    <input type="button" value="Clear" onclick="removePort('port_number');"/>
-                    <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
+                        <input type="text" name="device_address" value="<?php echo isset($_POST['device_address']) ? $_POST['device_address'] : DEVICE_ADDRESS; ?>">
+                        <div class="error-message">
+                            <?php echo isset($_SESSION['isValidation']['device_address']) ? $_SESSION['isValidation']['device_address'] : '';?>
+                        </div> 
+                        <br/><br/>
+                        <div class="example-text">Provide an IP or URL - For Example: 192.168.143.1 or demo.teachervirus.org</div><br/>
+                        <div class="text-field">Port</div>
+                        <input type="text" name="port_number" id="port_number" value="<?php echo isset($_POST['port_number']) ? $_POST['port_number'] : PORT_NUMBER; ?>">
+                        <input type="button" value="Clear" onclick="removePort('port_number');"/>
+                        <br/><br/><div class="example-text">Android devices are normally 8080.  Clear the field if using a normal webserver</div>
                 </div>
                 <div <?php if(DEBUG_TEXT == 1) { echo 'style="display:block"';} else { echo 'style="display:none"';}?>>
                     <div class="full-widthdebug1">
@@ -1286,7 +1308,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <input type="checkbox" name="show_debug" id="show_debug" value="<?php echo isset($_POST['show_debug']) ? $_POST['show_debug'] : DEBUG_TEXT; ?>" <?php echo (DEBUG_TEXT == 1) ? "checked='checked'" : ""; ?> onclick="changeValue('show_debug');">
                     </div>
                 </div>
-                <div class="full-widthdebug">
+                <div class="full-chmod">
                     <?php 
                         if($bChmod == 0 )
                         {
