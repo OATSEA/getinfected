@@ -31,18 +31,17 @@
         <title>Get Infected</title>
         <meta charset="utf-8">
         <style>
-                body{
+               body{
                     background-color: black;
                     min-height:800px;
                     padding: 0px;
-                    margin: 0px auto;
                     color: #fff;
                 }
+                
                 form{
                     border: thin solid #fff;
-                    margin-left: 25%;
                     padding: 15px;
-                    width: 50%;
+                    width: 90%;
                 }
                 .error-message{
                     color: red;
@@ -188,7 +187,7 @@
                 .full-widthdebug{
                         width: 100%;
                         min-height: 5px;
-                        margin: 15px;
+                        margin: 15px 0px;
                     }
                 .full-widthdebug1{
                     width: 100%;
@@ -217,7 +216,16 @@
                     margin: 15px 15px 15px 29px;
                     min-height: 5px;
                     width: 100%;
-}
+                }
+                .text h2{
+                    width: 100%;
+                    text-align: center;
+                }
+                #loading > h2 {
+                    font-size: 86%;
+                    text-align: center;
+                    margin-top:50%;
+                }
         </style>
         <script type="text/javascript">
             function checkLoaded(loaded){
@@ -1220,7 +1228,7 @@ if($_SESSION['isValidation']['flag'] == 1)
         <div id="container">
             <div class="payload-details">
                 <?php 
-                    echo is_dir(ROOT_DIR."/admin") ? "<h2>Update Teacher Virus</h2>" : "<h2>Ready to Get Infected?</h2>";
+                    echo is_dir(ROOT_DIR."/admin") ? "<div class='text'><h2>Update Teacher Virus</h2></div>" : "<div class='text'><h2>Ready to Get Infected?</h2></div>";
                 ?>
             </div>
             <div class="full-widthdebug">
