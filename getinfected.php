@@ -22,6 +22,8 @@
         define('INFECTED_RESOURCE','G');
         define('DEVICE_ADDRESS','');
         define('PORT_NUMBER','8080');
+        define('SHOW_TV','0');
+        define('CHMOD','1');
     }
 ?>
 <html> 
