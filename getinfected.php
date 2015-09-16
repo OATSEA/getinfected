@@ -286,7 +286,7 @@
                 #loading > h2 {
                     font-size: 86%;
                     text-align: center;
-                    margin-top:50%;
+                    margin-top: 25%;
                 }
         </style>
         <script type="text/javascript">
