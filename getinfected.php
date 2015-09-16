@@ -33,16 +33,78 @@
         <style>
                body{
                     background-color: black;
-                    min-height:800px;
                     padding: 0px;
                     color: #fff;
                 }
-                
                 form{
                     border: thin solid #fff;
+                    margin: 0px auto;
                     padding: 15px;
-                    width: 90%;
+                    width: 50%;
                 }
+                @media screen 
+                  and (device-width: 320px) 
+                  and (device-height: 640px) 
+                  {
+                        form{
+                            width: auto;
+                        }
+                }
+                @media only screen 
+                and (min-device-width: 320px) 
+                and (max-device-width: 480px)
+                {
+                    form{
+                            width: auto;
+                        }
+                }
+                @media only screen 
+                and (min-device-width: 320px) 
+                and (max-device-width: 568px)
+                {
+                    form{
+                            width: auto;
+                        }
+                }
+                @media only screen 
+                and (min-device-width: 375px) 
+                and (max-device-width: 667px) 
+                {
+                    form{
+                            width: auto;
+                        }
+                }
+                @media only screen 
+                and (min-device-width: 414px) 
+                and (max-device-width: 736px) 
+                {
+                    form{
+                            width: auto;
+                        }
+                }
+                @media screen 
+                  and (device-width: 360px) 
+                  and (device-height: 640px)
+                  {
+                      form{
+                            width: auto;
+                        }
+                }
+                @media screen 
+                  and (device-width: 768px) 
+                  and (device-height: 1024px)
+                  {
+                      form{
+                            width: auto;
+                        }
+                }
+                @media 
+                (min-device-width: 800px) 
+                and (max-device-width: 1280px) {
+                    form{
+                            width: auto;
+                        }
+              }
                 .error-message{
                     color: red;
                     text-align: right;
