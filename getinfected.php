@@ -33,8 +33,7 @@
         <style>
                body{
                     background-color: black;
-                    min-height: 730px;
-                    padding: 0px;
+                    padding: 0px 0px 340px;
                     color: #fff;
                 }
                 form{
