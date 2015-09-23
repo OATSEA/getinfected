@@ -33,6 +33,7 @@
         <style>
                body{
                     background-color: black;
+                    min-height: 730px;
                     padding: 0px;
                     color: #fff;
                 }
