@@ -811,16 +811,47 @@
             }
             else 
             {
-                if ($ip=="no") {
+                if ($ip=="no")
+                {
                     // Download from github zipball/master as no IP address set
                     $geturl = (!empty($sBranchName) && isset($_POST['infection_resource']) && $_POST['infection_resource'] == "branch_value") ? "https://github.com/$username/$repo/zipball/$sBranchName/" : "https://github.com/$username/$repo/zipball/master/";
                     $sGetInfectedGetUrl = "https://github.com/$username/getinfected/zipball/master/";
-                    copy($sGetInfectedGetUrl,$sInfectedZipFile);
-                } else {
+                    if (!copy($sGetInfectedGetUrl,$sInfectedZipFile))
+                    {
+                        if (is_dir(ROOT_DIR."/admin")) 
+                        {
+                    ?>  
+                            <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+                            <div class="color-white">
+                                <a class="play_img" href="<?php echo $protocol; ?>">
+                                    <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
+                                </a>
+                            </div><br/><br/>
+                    <?php 
+                        }
+                        exit("<h2>Infection Failed!</h2><p> couldn't copy $sGetInfectedGetUrl </p>");
+                    }
+                }
+                else
+                {
                     // as IP address has been set attempt download from IP address
                    $geturl = empty($nPort) ? "http://$ip/$zipfile" : "http://$ip:$nPort/$zipfile";
                    $sGetInfectedGetUrl = empty($nPort) ? "http://$ip/$sInfectedZipFile" : "http://$ip:$nPort/$sInfectedZipFile";
-                   copy($sGetInfectedGetUrl,$sInfectedZipFile);
+                   if (!copy($sGetInfectedGetUrl,$sInfectedZipFile))
+                    {
+                        if (is_dir(ROOT_DIR."/admin")) 
+                        {
+                    ?>  
+                            <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+                            <div class="color-white">
+                                <a class="play_img" href="<?php echo $protocol; ?>">
+                                    <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
+                                </a>
+                            </div><br/><br/>
+                    <?php 
+                        }
+                        exit("<h2>Infection Failed!</h2><p> couldn't copy $sGetInfectedGetUrl </p>");
+                    }
                 }
                 // TRY DOWNLOAD via copy
                 if ($debug) { echo "<h2>Download Files</h2>
@@ -828,7 +859,21 @@
                 // ** TO DO ** catch warnings
                 // get following error on MAC: 
                 // Warning: copy(): SSL operation failed with code 1.
-                $copyflag = copy($geturl,$zipfile);
+                if($copyflag = !copy($geturl,$zipfile))
+                {
+                    if (is_dir(ROOT_DIR."/admin")) 
+                    {
+                ?>  
+                        <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+                        <div class="color-white">
+                            <a class="play_img" href="<?php echo $protocol; ?>">
+                                <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
+                            </a>
+                        </div><br/><br/>
+                <?php 
+                    }
+                    exit("<h2>Infection Failed!</h2><p> couldn't copy $geturl </p>");
+                }
                 
                 if ($copyflag === TRUE) 
                 {
