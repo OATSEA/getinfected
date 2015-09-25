@@ -1428,7 +1428,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 </div>
                 <div class="full-chmod">
                     <?php 
-                        if($bChmod == 0 )
+                        if(!is_dir(ROOT_DIR."/admin"))
                         {
                     ?>
                             <div>
