@@ -178,10 +178,10 @@
                     text-align: center;
                 }
                 #loading-image {
-                   position: absolute;
-                   top: 100px;
-                   left: 240px;
-                   z-index: 100;
+                    position: absolute;
+                    top: 100px;
+                    left: 240px;
+                    z-index: 100;
                 }
                 .button
 		{
@@ -284,9 +284,7 @@
                     text-align: center;
                 }
                 #loading > h2 {
-                    font-size: 86%;
                     text-align: center;
-                    margin-top:25%;
                 }
         </style>
         <script type="text/javascript">
@@ -304,7 +302,7 @@
         </script>
     </head>
     <body class="main" onload="checkLoaded(false);">
-    <div id="loading"><?php echo is_dir(ROOT_DIR."/admin") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?></div>
+        <div id="loading"><img src="loading_spinner.gif"><?php echo is_dir(ROOT_DIR."/admin") ? "<h5>Updating....</h2>" : "<h2>Installing....</h2>";?></div>
     <script>
         checkLoaded(false);
     </script>
@@ -1408,12 +1406,14 @@ if($_SESSION['isValidation']['flag'] == 1)
                     <div class="mandatory"><font color="red">*</font> Indicates mandatory field</div>
                 </div>
             </div>
-
-                <div class="go-button">
-                    <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
-                </div><br/>    
-                </div>
-                <input type="hidden" name="setting_value" id="setting_value">
+            <div class="go-button">
+                <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
+            </div><br/>
+            <div class="full-widthdebug">
+                <div class="mandatory">V: 0.4 | B: master | TS: 20150928.0841</div>
+            </div>
+        </div>
+        <input type="hidden" name="setting_value" id="setting_value">
     </form>
 <?php
         }
