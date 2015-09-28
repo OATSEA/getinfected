@@ -392,7 +392,7 @@
                  rmdir($dir);
                } 
             }
-            if($bDownloadLatestVersion)
+            if($bRemovePreviousInstall)
             {
                 if($bInfectFiles)
                 {
