@@ -18,7 +18,8 @@
         if(file_exists(getcwd().'/IP.txt'))
         {
             $myfile = fopen(getcwd().'/IP.txt', "r") or die("Unable to open file!");
-            $protocol=fread($myfile,filesize(getcwd().'/IP.txt'));
+            $protocol = fread($myfile,filesize(getcwd().'/IP.txt'));
+            $protocol = trim($protocol);
         }
         else
         {
