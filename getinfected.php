@@ -1483,7 +1483,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <div class="mandatory">V: 0.4 | B: master | TS: 20151002.0100</div>
             </div>
             <div class="full-widthdebug">
-                <div class="mandatory">V: 0.4 | B: master | TS: TS: 20151002.0100</div>
+                <div class="mandatory">V: 0.4 | B: master | TS: 20151002.0100</div>
             </div>
         </div>
         <input type="hidden" name="setting_value" id="setting_value">
