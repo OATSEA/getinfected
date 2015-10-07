@@ -1475,13 +1475,13 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
             </div><br/>
             <div class="full-widthdebug">
-                <div class="mandatory">Getinfected - V: 0.4 | B: master | TS: 20151007.0234</div>
+                <div class="mandatory">Getinfected - V: 0.4 | B: master | TS: 20151007.0329</div>
             </div>
             <?php
                 if(file_exists(ROOT_DIR."/version.txt"))
                 {
                     $myfile = fopen(ROOT_DIR."/version.txt", "r") or die("Unable to open file!");
-                    $sVersion = fread($myfile,filesize(getcwd().'/IP.txt'));
+                    $sVersion = fread($myfile,filesize(ROOT_DIR."/version.txt"));
                     $sVersion = trim($sVersion);
             ?>
                     <div class="full-widthdebug">
