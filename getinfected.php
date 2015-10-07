@@ -302,11 +302,11 @@
                     width: 100%;
                 }
                 .text h2{
-                    font-size: 16px;
                     width: 100%;
                     text-align: center;
                 }
                 #loading > h2 {
+                    font-size: 55px;
                     text-align: center;
                 }
         </style>
@@ -325,7 +325,17 @@
         </script>
     </head>
     <body class="main" onload="checkLoaded(false);">
-        <div id="loading"><img src="loading_spinner.gif"><?php echo is_dir(ROOT_DIR."/admin") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?></div>
+        <div id="loading">
+            <?php
+                $sLoadingImg = ((file_exists($protocol.'/loading_spinner.gif')) ? $protocol.'/loading_spinner.gif' : ((file_exists($protocol.'/images/loading_spinner.gif')) ? $protocol.'/images/loading_spinner.gif' : ''));
+                if(!empty($sLoadingImg))
+                {
+            ?>
+                <img src="<?php echo $sLoadingImg; ?>">
+            <?php
+                } 
+                echo is_dir(ROOT_DIR."/admin") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?>
+        </div>
     <script>
         checkLoaded(false);
     </script>
@@ -1475,7 +1485,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
             </div><br/>
             <div class="full-widthdebug">
-                <div class="mandatory">Getinfected - V: 0.4 | B: master | TS: 20151007.0329</div>
+                <div class="mandatory">Getinfected - V: 0.4 | B: master | TS: 20151007.0505</div>
             </div>
             <?php
                 if(file_exists(ROOT_DIR."/version.txt"))
