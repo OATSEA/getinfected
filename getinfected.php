@@ -2,21 +2,20 @@
     if(session_status()!=PHP_SESSION_ACTIVE) session_start();
     error_reporting(E_ALL ^ E_WARNING);
     error_reporting(0);
-    
-    if(file_exists(getcwd().'/data/constants.php'))
-    {
-        require_once(getcwd().'/data/constants.php');
-        $protocol = SITE_URL;
-        if(file_exists(getcwd().'/IP.txt'))
-        {
-            $myfile = fopen(getcwd().'/IP.txt', "r") or die("Unable to open file!");
-            $protocol = fread($myfile,filesize(getcwd().'/IP.txt'));
-            $protocol = trim($protocol);
-        }
-    }
-    else if(file_exists(getcwd().'/data/bootstrap.php'))
+    if(file_exists(getcwd().'/data/bootstrap.php'))
     {
         require_once(getcwd().'/data/bootstrap.php');
+        if(file_exists(getcwd().'/data/constants.php'))
+        {
+            require_once(getcwd().'/data/constants.php');
+            $protocol = SITE_URL;
+            if(file_exists(getcwd().'/IP.txt'))
+            {
+                $myfile = fopen(getcwd().'/IP.txt', "r") or die("Unable to open file!");
+                $protocol = fread($myfile,filesize(getcwd().'/IP.txt'));
+                $protocol = trim($protocol);
+            }
+        }
         $protocol = SITE_URL;
         if(file_exists(getcwd().'/IP.txt'))
         {
@@ -327,7 +326,7 @@
     <body class="main" onload="checkLoaded(false);">
         <div id="loading">
             <?php
-                $sLoadingImg = ((file_exists($protocol.'/loading_spinner.gif')) ? $protocol.'/loading_spinner.gif' : ((file_exists($protocol.'/images/loading_spinner.gif')) ? $protocol.'/images/loading_spinner.gif' : ''));
+                $sLoadingImg = ((file_exists(getcwd().'/loading_spinner.gif')) ? $protocol.'/loading_spinner.gif' : ((file_exists(ROOT_DIR.'/images/loading_spinner.gif')) ? $protocol.'/images/loading_spinner.gif' : ''));
                 if(!empty($sLoadingImg))
                 {
             ?>
@@ -829,19 +828,10 @@
                 // ** TO DO ***
 
                 // current test stub instead of admin page opens in new window:
-                if(file_exists(getcwd().'/data/constants.php'))
+                if(file_exists(getcwd().'/data/bootstrap.php'))
                 {
-                    require_once(getcwd().'/data/constants.php');
-                    if(file_exists(getcwd().'/IP.txt'))
-                    {
-                        $myfile = fopen(getcwd().'/IP.txt', "r") or die("Unable to open file!");
-                        $protocol = fread($myfile,filesize(getcwd().'/IP.txt'));
-                        $protocol = trim($protocol);
-                    }
-                }
-                else if(file_exists(getcwd().'/data/bootstrap.php'))
-                {
-                    require_once(getcwd().'/data/bootstrap.php');
+                    require(getcwd().'/data/bootstrap.php');
+                    $protocol = SITE_URL;
                     if(file_exists(getcwd().'/IP.txt'))
                     {
                         $myfile = fopen(getcwd().'/IP.txt', "r") or die("Unable to open file!");
@@ -1139,19 +1129,10 @@
                 // ** TO DO ***
 
                 // current test stub instead of admin page opens in new window:
-                if(file_exists(getcwd().'/data/constants.php'))
+                if(file_exists(getcwd().'/data/bootstrap.php'))
                 {
-                    require_once(getcwd().'/data/constants.php');
-                    if(file_exists(getcwd().'/IP.txt'))
-                    {
-                        $myfile = fopen(getcwd().'/IP.txt', "r") or die("Unable to open file!");
-                        $protocol = fread($myfile,filesize(getcwd().'/IP.txt'));
-                        $protocol = trim($protocol);
-                    }
-                }
-                else if(file_exists(getcwd().'/data/bootstrap.php'))
-                {
-                    require_once(getcwd().'/data/bootstrap.php');
+                    require(getcwd().'/data/bootstrap.php');
+                    $protocol = SITE_URL;
                     if(file_exists(getcwd().'/IP.txt'))
                     {
                         $myfile = fopen(getcwd().'/IP.txt', "r") or die("Unable to open file!");
@@ -1185,20 +1166,9 @@ if($_SESSION['isValidation']['flag'] == 1)
         $_SESSION['isLoggedIn'] = isset($_SESSION['isLoggedIn']) ? $_SESSION['isLoggedIn'] : FALSE;
         if((is_dir("admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
-            if(file_exists(getcwd().'/data/constants.php'))
+            if(file_exists(getcwd().'/data/bootstrap.php'))
             {
-                require_once(getcwd().'/data/constants.php');
-                $protocol = SITE_URL;
-                if(file_exists(getcwd().'/IP.txt'))
-                {
-                    $myfile = fopen(getcwd().'/IP.txt', "r") or die("Unable to open file!");
-                    $protocol = fread($myfile,filesize(getcwd().'/IP.txt'));
-                    $protocol = trim($protocol);
-                }
-            }
-            else if(file_exists(getcwd().'/data/bootstrap.php'))
-            {
-                require_once(getcwd().'/data/bootstrap.php');
+                require(getcwd().'/data/bootstrap.php');
                 $protocol = SITE_URL;
                 if(file_exists(getcwd().'/IP.txt'))
                 {
@@ -1485,7 +1455,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
             </div><br/>
             <div class="full-widthdebug">
-                <div class="mandatory">Getinfected - V: 0.4 | B: master | TS: 20151007.0505</div>
+                <div class="mandatory">Getinfected - V: 0.4 | B: master | TS: 20151008.0830</div>
             </div>
             <?php
                 if(file_exists(ROOT_DIR."/version.txt"))
