@@ -1453,10 +1453,10 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <div class="mandatory">Getinfected - V: 0.4 | TS: 20151020.1637</div>
             </div>
             <?php
-                if(file_exists(ROOT_DIR."/version.txt"))
+                if(file_exists(ROOT_DIR."/gi-version.txt"))
                 {
-                    $myfile = fopen(ROOT_DIR."/version.txt", "r") or die("Unable to open file!");
-                    $sVersion = fread($myfile,filesize(ROOT_DIR."/version.txt"));
+                    $myfile = fopen(ROOT_DIR."/gi-version.txt", "r") or die("Unable to open file!");
+                    $sVersion = fread($myfile,filesize(ROOT_DIR."/gi-version.txt"));
                     $sVersion = trim($sVersion);
             ?>
                     <div class="full-widthdebug">
