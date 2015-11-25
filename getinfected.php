@@ -2,9 +2,18 @@
     if(session_status()!=PHP_SESSION_ACTIVE) session_start();
 //    error_reporting(E_ALL ^ E_WARNING);
 //    error_reporting(0);
-    if(file_exists(getcwd().'/data/UUID/constants.php'))
+    $constantpath = '';
+    if(file_exists('.general.txt'))
     {
-        require_once(getcwd().'/data/UUID/constants.php');
+        $myfile = fopen('.general.txt', "r") or die("Unable to open file!");
+        $protocol = fread($myfile,filesize('.general.txt'));
+        $constant = explode(';',$protocol);
+        $constantpath = $constant[1];
+    }
+    
+    if(file_exists(getcwd().'/data/'.$constantpath.'/constants.php'))
+    {
+        require_once(getcwd().'/data/'.$constantpath.'/constants.php');
         $protocol = SITE_URL;
         if(file_exists(getcwd().'/IP.txt'))
         {
@@ -328,7 +337,13 @@
                 <img src="<?php echo $sLoadingImg; ?>">
             <?php
                 } 
-                echo is_dir(ROOT_DIR."/tv/admin") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?>
+                echo is_dir(ROOT_DIR."
+                
+                
+                
+                
+                
+                ") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?>
         </div>
     <script>
         checkLoaded(false);
@@ -410,11 +425,9 @@
                 );
             }
             $uuid=gen_uuid();
-            $fuuid="UUID;".gen_uuid();
+            $fuuid="UUID;".$uuid;
             $myfile = fopen(".general.txt", "w");
             fwrite($myfile, $fuuid);
-             
-           
             
             function rrmdir($dir)
             {
@@ -451,11 +464,11 @@
             }
             if($bDeletePayload)
             {
-                rrmdir('payloads');
+                rrmdir('content');
             }
             if($bDeleteAdminPayload)
             {
-                rrmdir('admin');
+                rrmdir('tv');
             }   
             if($bDeleteContent)
             {
@@ -862,7 +875,7 @@
                         $protocol = trim($protocol);
                     }
                 }
-                echo '<h2>Infection Complete!</h2><h2><a href="'.$protocol.'/tv/admin"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
+                echo '<h2>Infection Complete!</h2><h2><a href="'.$protocol.'/tv/admin/buttons"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 $installed=1;
             }
             else 
@@ -1165,12 +1178,12 @@
                 }
                 echo '<h2>Infection Complete!</h2><h2><a href="'.$protocol.'/tv/admin/buttons"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 $installed=1;
-                
+                rename(getcwd()."/data/UUID",getcwd()."/data/".$uuid);
             } // END Download if zipfile doesn't already exists
         }
     }
   
-    rename(getcwd()."/data/UUID",getcwd()."/data/".$uuid);
+    
     function redirect($filename)
     {
         if (!headers_sent())
@@ -1348,9 +1361,9 @@ if($_SESSION['isValidation']['flag'] == 1)
         if (is_dir(ROOT_DIR."/tv/admin")) 
         {
     ?>  
-        <link href="<?php echo $protocol; ?>/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="<?php echo $protocol; ?>/tv/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
             <div class="color-white">
-                <a class="play_img" href="<?php echo $protocol.'/tv/admin'; ?>">
+                <a class="play_img" href="<?php echo $protocol.'/tv/admin/buttons'; ?>">
                     <i class="mainNav fa fa-arrow-circle-left fa-3x"></i>
                 </a>
             </div><br/><br/>
@@ -1418,7 +1431,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <div class="full-widthdebug">
                             <div class="branch-class" style="<?php echo (SHOW_TV == 1) ? 'display:block' : 'display:none';?>">
                                 <div class="text-field">Branch?<font color="red">*</font></div>
-                                    <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/UUID/constants.php')) ? TV_BRANCH : 'dev'; ?>" name="branch_name" id="branch_name">
+                                    <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/'.$constantpath.'/constants.php')) ? TV_BRANCH : 'dev'; ?>" name="branch_name" id="branch_name">
                                     <div class="clear-button">
                                         <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
                                     </div>
