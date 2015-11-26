@@ -1386,7 +1386,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 {
                 ?>
                     <div class="full-widthdebug">
-                        <input type="button" value="Update Get Infected ?" onclick="location.href='tv/updategetinfected/';">
+                        <input type="button" value="Update Get Infected ?" onclick="location.href='tv/admin/updatetv/';">
                     </div>
                     <div class="full-widthdebug">
                         <div class="text-field">
@@ -1402,10 +1402,10 @@ if($_SESSION['isValidation']['flag'] == 1)
                             <input type="checkbox" name="delete_data" id="delete_data" value="<?php echo isset($_POST['delete_data']) ? $_POST['delete_data'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_data']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_data');" >Delete Data
                         </div>
                         <div class="full-widthdebug">
-                            <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Payloads
+                            <input type="checkbox" name="delete_payload" id="delete_payload" value="<?php echo isset($_POST['delete_payload']) ? $_POST['delete_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_payload');">Delete Infect
                         </div>
                         <div class="full-widthdebug">
-                            <input type="checkbox" name="admin_payload" id="admin_payload" value="<?php echo isset($_POST['admin_payload']) ? $_POST['admin_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['admin_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('admin_payload');">Delete Admin Payloads
+                            <input type="checkbox" name="admin_payload" id="admin_payload" value="<?php echo isset($_POST['admin_payload']) ? $_POST['admin_payload'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['admin_payload']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('admin_payload');">Delete Tv
                         </div>
                         <div class="full-widthdebug">
                             <input type="checkbox" name="delete_content" id="delete_content" value="<?php echo isset($_POST['delete_content']) ? $_POST['delete_content'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_content']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_content');" >Delete Content
@@ -1530,7 +1530,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
             </div><br/>
             <div class="full-widthdebug">
-                <div class="mandatory">Getinfected - V: 0.4 | TS: 20151126.1155</div>
+                <div class="mandatory">Getinfected - V: 0.4 | TS: 20151126.0955</div>
             </div>
             <?php
                 if(file_exists(ROOT_DIR."/gi-version.txt"))
@@ -1542,7 +1542,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                     <div class="full-widthdebug">
                         <div class="mandatory"><?php echo $sVersion; ?></div>
                     </div>
-            <?php
+            <?php 
                 }
             ?>
         </div>
