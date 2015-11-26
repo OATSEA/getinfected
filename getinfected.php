@@ -43,7 +43,7 @@
             $protocol = $sRequestUrl;
         }
         define("ROOT_DIR",getcwd());
-        define('DEBUG_TEXT','0');
+        
         define('INFECTED_RESOURCE','G');
         define('DEVICE_ADDRESS','');
         define('PORT_NUMBER','8080');
@@ -343,6 +343,7 @@
         checkLoaded(false);
     </script>
 <?php
+    define('DEBUG_TEXT','0');
     $debug = (isset($_POST['show_debug']) ? $_POST['show_debug'] : (is_dir(ROOT_DIR."/tv/admin") ? DEBUG_TEXT : 1));
     $bChmod = isset($_POST['chmod']) ? $_POST['chmod'] : 0;
     $_SESSION['chmod'] = $bChmod;
