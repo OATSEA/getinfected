@@ -337,13 +337,7 @@
                 <img src="<?php echo $sLoadingImg; ?>">
             <?php
                 } 
-                echo is_dir(ROOT_DIR."
-                
-                
-                
-                
-                
-                ") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?>
+                echo is_dir(ROOT_DIR."/tv/admin") ? "<h2>Updating....</h2>" : "<h2>Installing....</h2>";?>
         </div>
     <script>
         checkLoaded(false);
@@ -1530,7 +1524,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
             </div><br/>
             <div class="full-widthdebug">
-                <div class="mandatory">Getinfected - V: 0.5 | TS: 20151126.1404</div>
+                <div class="mandatory">Getinfected - V: 0.5 | TS: 20151126.1401</div>
             </div>
             <?php
                 if(file_exists(ROOT_DIR."/gi-version.txt"))
