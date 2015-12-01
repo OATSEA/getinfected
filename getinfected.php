@@ -11,9 +11,9 @@
         $constantpath = $constant[1];
     }
     
-    if(file_exists(getcwd().'/data/'.$constantpath.'/constants.php'))
+    if(file_exists(getcwd().'/'.$constantpath.'/constants.php'))
     {
-        require_once(getcwd().'/data/'.$constantpath.'/constants.php');
+        require_once(getcwd().'/'.$constantpath.'/constants.php');
         $protocol = SITE_URL;
         if(file_exists(getcwd().'/IP.txt'))
         {
@@ -859,9 +859,9 @@
                 // ** TO DO ***
 
                 // current test stub instead of admin page opens in new window:
-                if(file_exists(getcwd().'/data/UUID/bootstrap.php'))
+                if(file_exists(getcwd().'/UUID/bootstrap.php'))
                 {
-                    require(getcwd().'/data/UUID/bootstrap.php');
+                    require(getcwd().'/UUID/bootstrap.php');
                     $protocol = SITE_URL;
                     if(file_exists(getcwd().'/IP.txt'))
                     {
@@ -1160,9 +1160,9 @@
                 // ** TO DO ***
 
                 // current test stub instead of admin page opens in new window:
-                if(file_exists(getcwd().'/data/UUID/bootstrap.php'))
+                if(file_exists(getcwd().'/UUID/bootstrap.php'))
                 {
-                    require(getcwd().'/data/UUID/bootstrap.php');
+                    require(getcwd().'/UUID/bootstrap.php');
                     $protocol = SITE_URL;
                     if(file_exists(getcwd().'/IP.txt'))
                     {
@@ -1173,7 +1173,8 @@
                 }
                 echo '<h2>Infection Complete!</h2><h2><a href="'.$protocol.'/tv/admin/buttons"> Next . . </a></h2>'; $_SESSION['isValidation']['flag'] = FALSE;
                 $installed=1;
-                rename(getcwd()."/data/UUID",getcwd()."/data/".$uuid);
+                rename(getcwd()."/UUID",getcwd().'/'.$uuid);
+                
             } // END Download if zipfile doesn't already exists
         }
     }
@@ -1200,9 +1201,9 @@ if($_SESSION['isValidation']['flag'] == 1)
         $_SESSION['isLoggedIn'] = isset($_SESSION['isLoggedIn']) ? $_SESSION['isLoggedIn'] : FALSE;
         if((is_dir("admin") && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])) || (isset($_GET['isValidUser']) && (isset($_SESSION['isLoggedIn']) && !$_SESSION['isLoggedIn'])))
         {
-            if(file_exists(getcwd().'/data/UUID/bootstrap.php'))
+            if(file_exists(getcwd().'/UUID/bootstrap.php'))
             {
-                require(getcwd().'/data/UUID/bootstrap.php');
+                require(getcwd().'/UUID/bootstrap.php');
                 $protocol = SITE_URL;
                 if(file_exists(getcwd().'/IP.txt'))
                 {
@@ -1426,7 +1427,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <div class="full-widthdebug">
                             <div class="branch-class" style="<?php echo (SHOW_TV == 1) ? 'display:block' : 'display:none';?>">
                                 <div class="text-field">Branch?<font color="red">*</font></div>
-                                    <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/data/'.$constantpath.'/constants.php')) ? TV_BRANCH : 'dev'; ?>" name="branch_name" id="branch_name">
+                                    <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/'.$constantpath.'/constants.php')) ? TV_BRANCH : 'dev'; ?>" name="branch_name" id="branch_name">
                                     <div class="clear-button">
                                         <input type="button" value="Clear" onclick="removePort('branch_name');"/><br/>
                                     </div>
@@ -1525,7 +1526,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
             </div><br/>
             <div class="full-widthdebug">
-                <div class="mandatory">Getinfected - V: 0.5 | TS: 20151126.1401</div>
+                <div class="mandatory">Getinfected - V: 0.5 | TS: 201512.1701</div>
             </div>
             <?php
                 if(file_exists(ROOT_DIR."/gi-version.txt"))
