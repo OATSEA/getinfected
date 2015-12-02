@@ -45,10 +45,11 @@
         define("ROOT_DIR",getcwd());
         
         define('INFECTED_RESOURCE','G');
+        define('DEBUG_TEXT','0');
         define('DEVICE_ADDRESS','');
         define('PORT_NUMBER','8080');
         define('SHOW_TV','0');
-        define('CHMOD','0');
+        define('CHMOD','0'); 
     }
 ?>
 <html> 
@@ -343,7 +344,6 @@
         checkLoaded(false);
     </script>
 <?php
-    define('DEBUG_TEXT','0');
     $debug = (isset($_POST['show_debug']) ? $_POST['show_debug'] : (is_dir(ROOT_DIR."/tv/admin") ? DEBUG_TEXT : 1));
     $bChmod = isset($_POST['chmod']) ? $_POST['chmod'] : 0;
     $_SESSION['chmod'] = $bChmod;
