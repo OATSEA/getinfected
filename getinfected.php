@@ -1526,7 +1526,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
             </div><br/>
             <div class="full-widthdebug">
-                <div class="mandatory">Getinfected - V: 0.5 | TS: 201512.1701</div>
+                <div class="mandatory">Getinfected - V: 0.5 | TS: 20151202.1100</div>
             </div>
             <?php
                 if(file_exists(ROOT_DIR."/gi-version.txt"))
