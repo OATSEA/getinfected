@@ -1,7 +1,7 @@
 <?php 
     if(session_status()!=PHP_SESSION_ACTIVE) session_start();
-//    error_reporting(E_ALL ^ E_WARNING);
-//    error_reporting(0);
+      error_reporting(E_ALL ^ E_WARNING);
+     error_reporting(0);
     $constantpath = '';
     if(file_exists('.general.txt'))
     {
@@ -1526,7 +1526,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
             </div><br/>
             <div class="full-widthdebug">
-                <div class="mandatory">Getinfected - V: 0.5 | TS: 20151202.1300</div>
+                <div class="mandatory">Getinfected - V: 0.5 | TS: 20151202.1430</div>
             </div>
             <?php
                 if(file_exists(ROOT_DIR."/gi-version.txt"))
