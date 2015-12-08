@@ -363,6 +363,7 @@
         $bDeletePayload = isset($_POST['delete_payload']) ? $_POST['delete_payload'] : 0;
         $bDeleteAdminPayload = isset($_POST['admin_payload']) ? $_POST['admin_payload'] : 0;
         $bDeleteContent = isset($_POST['delete_content']) ? $_POST['delete_content'] : 0;
+        $bDeleteUuid = isset($_POST['delete_uuid']) ? $_POST['delete_uuid'] : 0;
         
         if($_POST['infection_resource'] == 'branch_value')
         {
@@ -1260,10 +1261,12 @@ if($_SESSION['isValidation']['flag'] == 1)
                     document.getElementById("delete_payload").checked = true;
                     document.getElementById("admin_payload").checked = true;
                     document.getElementById("delete_content").checked = true;
+                    document.getElementById("delete_uuid").checked = true;
                     document.getElementById("delete_data").value = 1;
                     document.getElementById("delete_payload").value = 1;
                     document.getElementById("admin_payload").value = 1;
                     document.getElementById("delete_content").value = 1;
+                    document.getElementById("delete_uuid").value = 1;
                 }
                 if(boxId == "download_latest_version")
                 {
@@ -1310,10 +1313,12 @@ if($_SESSION['isValidation']['flag'] == 1)
                     document.getElementById("delete_payload").checked = false;
                     document.getElementById("admin_payload").checked = false;
                     document.getElementById("delete_content").checked = false;
+                    document.getElementById("delete_uuid").checked = false;
                     document.getElementById("delete_data").value = 0;
                     document.getElementById("delete_payload").value = 0;
                     document.getElementById("admin_payload").value = 0;
                     document.getElementById("delete_content").value = 0;
+                    document.getElementById("delete_uuid").value = 0;
                 }
             }
             window.onload = function ()
@@ -1406,6 +1411,10 @@ if($_SESSION['isValidation']['flag'] == 1)
                         <div class="full-widthdebug">
                             <input type="checkbox" name="delete_content" id="delete_content" value="<?php echo isset($_POST['delete_content']) ? $_POST['delete_content'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_content']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_content');" >Delete Content
                         </div>
+                        <div class="full-widthdebug">
+                            <input type="checkbox" name="delete_uuid" id="delete_uuid" value="<?php echo isset($_POST['delete_uuid']) ? $_POST['delete_uuid'] : empty($_POST) ? '1' : '0'; ?>" <?php echo isset($_POST['delete_uuid']) ? "checked='checked'" : empty($_POST) ? "checked = 'checked'" : ''; ?> onclick="changeValue('delete_uuid');" >Delete UUID
+                        </div>
+                        
                     </div>
                     <div class="full-widthdebug">
                         <div class="text-field">
@@ -1425,7 +1434,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                     </div>
                     <div id="branch_value" class="sources" style="<?php echo (INFECTED_RESOURCE == 'G') ? 'display:block' : 'display:none';?>">
                         <div class="full-widthdebug">
-                            <div class="branch-class" style="<?php echo (SHOW_TV == 1) ? 'display:block' : 'display:none';?>">
+                            <div class="branch-class" style="<?php echo (isset($_GET['b']) && ($_GET['b'] == 1) || (SHOW_TV == 1)) ? 'display:block' : 'display:none';?>">
                                 <div class="text-field">Branch?<font color="red">*</font></div>
                                     <input type="text" value="<?php echo isset($_POST['branch_name']) ? $_POST['branch_name'] : (file_exists(getcwd().'/'.$constantpath.'/constants.php')) ? TV_BRANCH : 'dev'; ?>" name="branch_name" id="branch_name">
                                     <div class="clear-button">
@@ -1526,7 +1535,7 @@ if($_SESSION['isValidation']['flag'] == 1)
                 <input type="button" name="button" id="button" value="GO!" align="center" onclick="checkLoaded(true);">  
             </div><br/>
             <div class="full-widthdebug">
-                <div class="mandatory">Getinfected - V: 0.5 | TS: 20151202.1430</div>
+                <div class="mandatory">Getinfected - V: 0.5 | TS: 20151208.1630</div>
             </div>
             <?php
                 if(file_exists(ROOT_DIR."/gi-version.txt"))
